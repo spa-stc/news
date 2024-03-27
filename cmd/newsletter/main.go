@@ -1,10 +1,10 @@
 package main
 
 import (
+	"flag"
 	"log"
-	"os"
-	"strings"
 
+	"github.com/facebookgo/flagenv"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 
@@ -12,15 +12,22 @@ import (
 	_ "github.com/spa-stc/news/migrations"
 )
 
+var (
+	Production bool
+)
+
+func init() {
+	flag.BoolVar(&Production, "production", false, "production mode")
+}
+
 func main() {
+	flagenv.Parse()
+
 	app := pocketbase.New()
 
-	isGoRun := strings.HasPrefix(os.Args[0], os.TempDir())
-
 	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{
-		// enable auto creation of migration files when making collection changes in the Admin UI
-		// (the isGoRun check is to enable it only during development)
-		Automigrate: isGoRun,
+		// enable auto creation of migration files when making collection changes in the Admin UI while not in prod.
+		Automigrate: !Production,
 	})
 
 	if err := app.Start(); err != nil {
