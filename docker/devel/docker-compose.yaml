@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  # Recieve Emails.
+  inbucket: 
+    image: inbucket/inbucket:latest 
+    ports:
+      - "9000:9000"
+      - "2500:2500"
+      - "1100:1100"
