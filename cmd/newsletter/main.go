@@ -7,6 +7,9 @@ import (
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
+
+	// Our pocketbase migrations.
+	_ "github.com/spa-stc/news/migrations"
 )
 
 func main() {
