@@ -2,6 +2,7 @@
   import { user } from "$lib/pocketbase";
   import * as Avatar from "$lib/components/ui/avatar";
   import Button from "../ui/button/button.svelte";
+  import { push } from "svelte-spa-router";
 </script>
 
 {#if $user}
@@ -12,5 +13,5 @@
     <Avatar.Fallback>{$user.name}</Avatar.Fallback>
   </Avatar.Root>
 {:else}
-  <Button>Login</Button>
+  <Button on:click={() => push("/login")}>Login</Button>
 {/if}

@@ -4,5 +4,8 @@ import { wrap } from "svelte-spa-router/wrap";
 
 export const routes = {
   "/": Home,
+  "/login": wrap({
+    asyncComponent: () => import("./routes/LoginSignup.svelte"),
+  }),
   "*": NotFound,
 };
