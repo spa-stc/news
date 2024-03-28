@@ -45,7 +45,7 @@
         />
       </FormItem>
       <FormItem>
-        <Label>Password</Label>
+        <Label>Password:</Label>
         <Input
           type="password"
           id="password"

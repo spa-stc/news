@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as Tabs from "$lib/components/ui/tabs";
   import Login from "$lib/components/login/Login.svelte";
+  import Signup from "$lib/components/login/Signup.svelte";
 </script>
 
 <div class="container-sm mx-auto mt-6 sm:mt-12">
@@ -12,6 +13,9 @@
 
     <Tabs.Content value="login">
       <Login />
+    </Tabs.Content>
+    <Tabs.Content value="signup">
+      <Signup />
     </Tabs.Content>
   </Tabs.Root>
 </div>
