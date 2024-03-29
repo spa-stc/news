@@ -7,5 +7,8 @@ export const routes = {
   "/login": wrap({
     asyncComponent: () => import("./routes/LoginSignup.svelte"),
   }),
+  "/post-signup": wrap({
+    asyncComponent: () => import("./routes/PostSignup.svelte"),
+  }),
   "*": NotFound,
 };

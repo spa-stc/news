@@ -49,7 +49,7 @@ export const useSignup = () =>
   createMutation<void, ClientResponseError, SignupData>({
     mutationFn: signup,
     onSuccess: () => {
-      push("/");
+      push("/post-signup");
       toast.success("Sign Up Sucessful!");
     },
     onError: (err) => {

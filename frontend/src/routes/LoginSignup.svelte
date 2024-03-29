@@ -5,7 +5,7 @@
 </script>
 
 <div class="container-sm mx-auto mt-6 sm:mt-12">
-  <Tabs.Root value="login" class="w-[400px]">
+  <Tabs.Root value="login" class="sm:w-[400px] w-[350px]">
     <Tabs.List class="grid w-full grid-cols-2">
       <Tabs.Trigger value="login">Log In</Tabs.Trigger>
       <Tabs.Trigger value="signup">Sign Up</Tabs.Trigger>
