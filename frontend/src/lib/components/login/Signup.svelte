@@ -6,6 +6,8 @@
   import Button from "../ui/button/button.svelte";
   import { pb } from "$lib/pocketbase";
   import { push } from "svelte-spa-router";
+  import toast from "svelte-french-toast";
+  import { ClientResponseError } from "pocketbase";
 
   let email = "";
   let password = "";
@@ -14,7 +16,7 @@
 
   async function signup() {
     if (password != password_confirmation) {
-      alert("passwords much match");
+      toast.error("passwords much match");
     }
 
     try {
@@ -33,7 +35,12 @@
 
       push("/");
     } catch (err) {
-      alert(err);
+      if (err instanceof ClientResponseError) {
+        toast.error(err.message);
+        return;
+      }
+
+      toast.error("Something Went Wrong, Please Try Again.");
     }
   }
 </script>

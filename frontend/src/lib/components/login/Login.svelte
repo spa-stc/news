@@ -7,23 +7,24 @@
   import { pb } from "$lib/pocketbase";
   import { push } from "svelte-spa-router";
   import { ClientResponseError } from "pocketbase";
+  import toast from "svelte-french-toast";
 
   let email = "";
   let password = "";
 
   async function login() {
     try {
-      const result = await pb
-        .collection("users")
-        .authWithPassword(email, password);
+      await pb.collection("users").authWithPassword(email, password);
 
       push("/");
+      toast.success("Logged In!");
     } catch (err) {
       if (err instanceof ClientResponseError) {
-        alert(err.message);
+        toast.error(err.message);
+        return;
       }
 
-      alert("something went wrong, please try again");
+      toast.error("something went wrong, please try again");
     }
   }
 </script>
