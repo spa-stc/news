@@ -4,45 +4,14 @@
   import Input from "../ui/input/input.svelte";
   import FormItem from "./FormItem.svelte";
   import Button from "../ui/button/button.svelte";
-  import { pb } from "$lib/pocketbase";
-  import { push } from "svelte-spa-router";
-  import toast from "svelte-french-toast";
-  import { ClientResponseError } from "pocketbase";
+  import { useSignup } from "./mutations";
 
   let email = "";
   let password = "";
   let password_confirmation = "";
   let name = "";
 
-  async function signup() {
-    if (password != password_confirmation) {
-      toast.error("passwords much match");
-    }
-
-    try {
-      const data = {
-        email: email,
-        emailVisibility: false,
-        password: password,
-        passwordConfirm: password,
-        name: name,
-        role: "student",
-      };
-
-      const result = await pb.collection("users").create(data);
-
-      await pb.collection("users").requestVerification(data.email);
-
-      push("/");
-    } catch (err) {
-      if (err instanceof ClientResponseError) {
-        toast.error(err.message);
-        return;
-      }
-
-      toast.error("Something Went Wrong, Please Try Again.");
-    }
-  }
+  const signup = useSignup();
 </script>
 
 <Card.Root>
@@ -89,7 +58,16 @@
         />
       </FormItem>
 
-      <Button class="mt-4" on:click={signup}>Sign Up</Button>
+      <Button
+        class="mt-4"
+        on:click={() =>
+          $signup.mutate({
+            email: email,
+            name: name,
+            password: password,
+            password_confirm: password_confirmation,
+          })}>Sign Up</Button
+      >
     </form>
   </Card.Content>
 </Card.Root>

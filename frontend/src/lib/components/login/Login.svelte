@@ -4,29 +4,12 @@
   import Input from "../ui/input/input.svelte";
   import FormItem from "./FormItem.svelte";
   import Button from "../ui/button/button.svelte";
-  import { pb } from "$lib/pocketbase";
-  import { push } from "svelte-spa-router";
-  import { ClientResponseError } from "pocketbase";
-  import toast from "svelte-french-toast";
+  import { useLogin } from "./mutations";
 
   let email = "";
   let password = "";
 
-  async function login() {
-    try {
-      await pb.collection("users").authWithPassword(email, password);
-
-      push("/");
-      toast.success("Logged In!");
-    } catch (err) {
-      if (err instanceof ClientResponseError) {
-        toast.error(err.message);
-        return;
-      }
-
-      toast.error("something went wrong, please try again");
-    }
-  }
+  const login = useLogin();
 </script>
 
 <Card.Root>
@@ -55,7 +38,11 @@
         />
       </FormItem>
 
-      <Button class="mt-4" on:click={login}>Log In</Button>
+      <Button
+        class="mt-4"
+        on:click={() => $login.mutate({ email: email, password: password })}
+        >Log In</Button
+      >
     </form>
   </Card.Content>
 </Card.Root>
