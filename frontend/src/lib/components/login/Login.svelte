@@ -2,7 +2,7 @@
   import * as Card from "$lib/components/ui/card";
   import Label from "../ui/label/label.svelte";
   import Input from "../ui/input/input.svelte";
-  import FormItem from "./FormItem.svelte";
+  import FormItem from "../FormItem.svelte";
   import Button from "../ui/button/button.svelte";
   import { useLogin } from "./mutations";
 

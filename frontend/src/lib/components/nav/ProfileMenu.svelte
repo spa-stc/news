@@ -3,6 +3,7 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { pb } from "$lib/pocketbase";
   import toast from "svelte-french-toast";
+  import { push } from "svelte-spa-router";
 
   export let username: string;
 </script>
@@ -17,6 +18,12 @@
     </Avatar.Root>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content>
+    <DropdownMenu.Group>
+      <DropdownMenu.Label>Announcements</DropdownMenu.Label>
+      <DropdownMenu.Item on:click={() => push("/submit")}
+        >Submit</DropdownMenu.Item
+      >
+    </DropdownMenu.Group>
     <DropdownMenu.Group>
       <DropdownMenu.Label>Account</DropdownMenu.Label>
       <DropdownMenu.Item

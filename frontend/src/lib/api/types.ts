@@ -8,7 +8,7 @@ interface User {
   role: "admin" | "student";
 }
 
-interface Announcement {
+export interface Announcement {
   id: string;
   title: string;
   content: string;

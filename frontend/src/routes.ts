@@ -10,5 +10,8 @@ export const routes = {
   "/post-signup": wrap({
     asyncComponent: () => import("./routes/PostSignup.svelte"),
   }),
+  "/submit": wrap({
+    asyncComponent: () => import("./routes/SubmitAnnouncement.svelte"),
+  }),
   "*": NotFound,
 };
