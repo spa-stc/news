@@ -11,11 +11,7 @@
 
     perSystem = { config, self', inputs', pkgs, system, ... }: {
       devShells.default = pkgs.mkShell {
-        buildInputs = with pkgs; [ dive just ];
-      };
-
-      devShells.ci = pkgs.mkShell {
-        buildInputs = with pkgs; [ just ];
+        buildInputs = with pkgs; [ dive just nodePackages_latest.wrangler ];
       };
 
       packages = rec {
