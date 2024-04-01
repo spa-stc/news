@@ -18,4 +18,3 @@ add-default-admin:
 
 build-docker:
   nix build .#bin-docker
-  docker load < result
