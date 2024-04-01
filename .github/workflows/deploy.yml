@@ -14,6 +14,13 @@ jobs:
 
     - name: Build Image
       run: nix develop -c just build-docker
+
+    - name: Upload Image Artifact 
+      uses: actions/upload-artifact@v4
+      with:
+        name: bin-docker-image 
+        path: result
+        retention-days: 1
   
   frontend:
     runs-on: ubuntu-latest
@@ -24,6 +31,28 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
 
     - run: nix build .#frontend
-      
 
+    - name: Upload Frontend Bundle
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-bundle
+        path: result
+        retention-days: 1
 
+  upload-docker:
+    runs-on: ubuntu-latest
+    needs: [frontend, docker]
+    permissions:
+      contents: read
+      packages: write
+    steps: 
+    - name: Download Docker Image
+      uses: actions/download-artifact@v4
+      with:
+        name: bin-docker-image
+
+    - name: Load Docker Image
+      run: docker load < result
+
+    - name: Tag Image
+      run: docker tag newsletter:latest ghcr.io/spa-stc/news:latest 
