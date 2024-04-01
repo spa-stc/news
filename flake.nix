@@ -14,6 +14,10 @@
         buildInputs = with pkgs; [ dive just ];
       };
 
+      devShells.ci = pkgs.mkShell {
+        buildInputs = with pkgs; [ just ];
+      };
+
       packages = rec {
         bin = pkgs.buildGo122Module {
           name = "newsletter";

@@ -1,0 +1,29 @@
+name: "Deploy"
+
+on:
+  push:
+
+jobs: 
+  docker:
+    runs-on: ubuntu-latest 
+    steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v25
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+
+    - name: Build Image
+      run: nix develop -c just build-docker
+  
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v25
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+
+    - run: nix build .#frontend
+      
+
+

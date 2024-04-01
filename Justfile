@@ -15,3 +15,7 @@ migrate:
 # Add a default admin for development.
 add-default-admin:
   go run cmd/newsletter/main.go admin create test@gmail.com 1234567890
+
+build-docker:
+  nix build .#bin-docker
+  docker load < result
