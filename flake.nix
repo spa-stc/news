@@ -26,7 +26,7 @@
           name = "newsletter";
           tag = "latest";
           config = {
-            Cmd = [ "${self'.packages.default}/bin/newsletter" "serve" ];
+            Cmd = [ "${self'.packages.default}/bin/newsletter" "serve" "--http" "0.0.0.0:8090" ];
             Env = [
               "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
               "PRODUCTION=true"
