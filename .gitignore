@@ -22,3 +22,6 @@ go.work
 
 # Pocketbase data
 pb_data
+
+# Nix Result: 
+result
