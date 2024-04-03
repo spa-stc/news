@@ -31,12 +31,13 @@
   }
 
   let userid = "";
-
-  if (!$user) {
-    toast.error("You Must Be Logged In To Use This Feature");
-    push("/login");
-  } else {
-    userid = $user.id;
+  $: {
+    if (!$user) {
+      toast.error("You Must Be Logged In To Use This Feature");
+      push("/login");
+    } else {
+      userid = $user.id;
+    }
   }
 
   const mutation = createMutation<Announcement, ClientResponseError, FormData>({
