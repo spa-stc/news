@@ -2,7 +2,9 @@ import PocketBase from "pocketbase";
 import { writable } from "svelte/store";
 import type { TypedPocketBase } from "./api/types";
 
-export const pb = new PocketBase("http://localhost:8090") as TypedPocketBase;
+export const pb = new PocketBase(
+  import.meta.env.VITE_PB_URL
+) as TypedPocketBase;
 
 export const user = writable(pb.authStore.model);
 

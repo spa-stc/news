@@ -42,6 +42,8 @@
           installPhase = ''
             cp -r dist $out
           '';
+
+          VITE_PB_URL = "http://localhost:8090";
         };
 
         default = bin;
