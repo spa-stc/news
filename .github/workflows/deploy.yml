@@ -64,7 +64,10 @@ jobs:
       run: docker load < result
 
     - name: Tag Image
-      run: docker tag newsletter:latest ghcr.io/spa-stc/news:${{ github.event.release.tag_name }} 
+      run: |
+        docker tag newsletter:latest ghcr.io/spa-stc/news:latest
+        docker tag newsletter:latest ghcr.io/spa-stc/news:${{ github.event.release.tag_name }} 
+        
 
     - name: Container Registry Login
       uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
@@ -74,7 +77,9 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Push Docker Image To GHCR
-      run: docker push ghcr.io/spa-stc/news:${{ github.event.release.tag_name }}
+      run: |
+        docker push ghcr.io/spa-stc/news:${{ github.event.release.tag_name }}
+        docker push ghcr.io/spa-stc/news:latest
 
   push-pages:
     runs-on: ubuntu-latest
