@@ -5,13 +5,17 @@
   import { ChevronRight, ChevronLeft } from "lucide-svelte";
   import toast from "svelte-french-toast";
   import ErrorResponse from "$lib/components/ErrorResponse.svelte";
+  import { getDateQueryFields } from "./date";
 
   let page_num: number = 1;
   let perPage: number = 10;
   let siblingCount: number = 1;
   let totalItems = 0;
 
-  $: announcements = useAnnouncements(page_num, perPage, "approved = true");
+  $: announcements = useAnnouncements(page_num, perPage, {
+    date: getDateQueryFields(),
+    approved: true,
+  });
   $: {
     if ($announcements.isSuccess) {
       totalItems = $announcements.data.totalItems;
