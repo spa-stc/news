@@ -3,6 +3,8 @@
   import Announcement from "./Announcement.svelte";
   import * as Pagination from "$lib/components/ui/pagination";
   import { ChevronRight, ChevronLeft } from "lucide-svelte";
+  import toast from "svelte-french-toast";
+  import ErrorResponse from "$lib/components/ErrorResponse.svelte";
 
   let page_num: number = 1;
   let perPage: number = 10;
@@ -14,13 +16,17 @@
     if ($announcements.isSuccess) {
       totalItems = $announcements.data.totalItems;
     }
+
+    if ($announcements.isError) {
+      toast.error(`Something Went Wrong: ${$announcements.error}`);
+    }
   }
 </script>
 
 {#if $announcements.isPending}
-  Pending
+  <h1 class="text-xl mx-auto text-center my-12">Loading...</h1>
 {:else if $announcements.isError}
-  Error
+  <ErrorResponse />
 {:else if $announcements.isSuccess}
   {#each $announcements.data.items as data}
     <Announcement {data} />
