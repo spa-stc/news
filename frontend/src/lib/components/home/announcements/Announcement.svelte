@@ -8,7 +8,7 @@
   $: clean = DOMPurify.sanitize(data.content, { USE_PROFILES: { html: true } });
 </script>
 
-<Card.Root>
+<Card.Root class="first:mt-0 mt-2">
   <Card.Header>
     <Card.Title>{data.title}</Card.Title>
     <Card.Description>From: {data.expand.author.name}</Card.Description>
