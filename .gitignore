@@ -25,3 +25,6 @@ pb_data
 
 # Nix Result: 
 result
+
+# SSH 
+.ssh
