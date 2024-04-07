@@ -14,6 +14,9 @@ export interface Announcement {
   content: string;
   author: string;
   approved: boolean;
+  expand: {
+    author: User;
+  };
 }
 
 // Pocket base instance, with API types.
