@@ -4,14 +4,26 @@
 
     # Framework For Defining "Flake Modules" with imports
     flake-parts.url = "github:hercules-ci/flake-parts";
+
+    # Deployments
+    deploy-rs.url = "github:serokell/deploy-rs";
+
+    # Secrets 
+    agenix.url = "github:ryantm/agenix";
   };
 
   outputs = inputs@{ self, ... }: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
     systems = [ "x86_64-linux" "aarch64-linux" ];
 
+    imports = [ ./nixos ];
+
     perSystem = { config, self', inputs', pkgs, system, ... }: {
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [ dive just nodePackages_latest.wrangler ];
+      };
+
+      devShells.backend = pkgs.mkShell {
+        buildInputs = with pkgs; [ just inputs.agenix.packages.${system}.default inputs.deploy-rs.packages.${system}.default ];
       };
 
       packages = rec {
