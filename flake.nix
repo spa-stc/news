@@ -37,7 +37,7 @@
         frontend = pkgs.buildNpmPackage {
           name = "newsletter-frontend";
           src = ./frontend;
-          npmDepsHash = "sha256-DRFOrx3ONYED47NG7eB9s30ZZ0xpPJJnG5v9L53V7EU=";
+          npmDepsHash = "sha256-fNgoQB2Gp21s2McjuQhWfaxoMJxathil0Fvrz9XBMtA=";
 
           installPhase = ''
             cp -r dist $out
