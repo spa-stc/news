@@ -17,6 +17,7 @@
     DateFormatter,
     getLocalTimeZone,
     type DateValue,
+    today,
   } from "@internationalized/date";
   import { type DateRange } from "bits-ui";
   import { CalendarIcon } from "lucide-svelte";
@@ -65,9 +66,11 @@
     dateStyle: "full",
   });
 
+  let now = today(getLocalTimeZone());
+
   let value: DateRange | undefined = {
-    start: new CalendarDate(2024, 3, 30),
-    end: new CalendarDate(2024, 4, 1),
+    start: now,
+    end: now.add({ days: 5 }),
   };
 
   let startValue: DateValue | undefined = undefined;
