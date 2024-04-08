@@ -13,5 +13,6 @@ let
 in
 rec {
   "secrets/ts_key.age".publicKeys = keys;
+  "secrets/pb_key.age".publicKeys = keys;
 }
 

@@ -5,6 +5,8 @@
 
 
   config = {
+    users.groups.stc = { };
+
     nix = {
       extraOptions = ''
         experimental-features = nix-command flakes

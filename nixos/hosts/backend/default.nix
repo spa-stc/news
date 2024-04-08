@@ -4,6 +4,10 @@
     ../../hardware/do.nix
   ];
 
+  stc.services = {
+    pb.enable = true;
+  };
+
   services.openssh = {
     enable = true;
     settings = {

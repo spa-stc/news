@@ -17,6 +17,8 @@
 
     imports = [ ./nixos ];
 
+    flake.nixosModules.pb = import ./pocketbase.nix self;
+
     perSystem = { config, self', inputs', pkgs, system, ... }: {
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [ dive just nodePackages_latest.wrangler ];

@@ -9,6 +9,8 @@ let
 
       # Other Common Modules
       ./common
+
+      self.nixosModules.pb
     ] ++ extraModules;
   };
 
