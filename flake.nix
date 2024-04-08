@@ -57,7 +57,7 @@
             cp -r dist $out
           '';
 
-          VITE_PB_URL = "http://localhost:8090";
+          VITE_PB_URL = "https://newspb.stpaulacademy.tech";
         };
 
         default = bin;
