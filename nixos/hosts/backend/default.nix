@@ -23,6 +23,8 @@
     };
   };
 
+  time.timeZone = "America/Chicago";
+
   swapDevices = [{
     device = "/var/lib/swap";
     size = 1024 * 1; # 1 GB Swap.
