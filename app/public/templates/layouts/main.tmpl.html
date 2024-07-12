@@ -1,0 +1,22 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>{{.Title}} - SPA Student Newsletter</title>
+
+	{{ template "includes/_tailwind.tmpl.html" .Info}}
+</head>
+
+<body class="dark">
+	{{ template "includes/_dark_mode_js.tmpl.html" .}}
+
+	<h1>Hello</h1>
+
+	{{block "content" .}}{{end}}
+</body>
+
+</html>
