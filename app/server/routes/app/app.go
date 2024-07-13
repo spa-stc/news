@@ -11,23 +11,37 @@ import (
 // App Service defining the routes for the main MPA.
 type Service struct {
 	profile *profile.Profile
+	info    render.SiteInfo
 }
 
 func NewService(p *profile.Profile) *Service {
 	return &Service{
 		profile: p,
+		info:    getSiteInfo(p),
 	}
 }
 
 // Register the app service onto the router.
-func (*Service) Register(ctx context.Context, echoServer *echo.Echo) {
+func (s *Service) Register(ctx context.Context, echoServer *echo.Echo) {
 	echoServer.GET("/", func(c echo.Context) error {
-		data := render.BaseContext{
-			Title: "Hello",
+		data := struct {
+			render.BaseContext
 
-			Info: render.SiteInfo{},
+			Message string
+		}{
+			BaseContext: render.BaseContext{
+				Title: "Hello",
+				Info:  s.info,
+			},
+			Message: "World",
 		}
 
-		return c.Render(200, "layouts/main.tmpl.html", &data)
+		return c.Render(200, "pages/index.tmpl.html", &data)
 	})
+}
+
+func getSiteInfo(p *profile.Profile) render.SiteInfo {
+	return render.SiteInfo{
+		Env: p.Env,
+	}
 }

@@ -11,12 +11,15 @@
 	{{ template "includes/_tailwind.tmpl.html" .Info}}
 </head>
 
-<body class="dark">
+<body class="px-4 py-2 mx-auto bg-bg-hard dark:bg-bgDark-hard text-fg-0 dark:text-fgDark-0 lg:max-w-5xl">
 	{{ template "includes/_dark_mode_js.tmpl.html" .}}
 
-	<h1>Hello</h1>
+	{{ template "includes/navbar.tmpl.html" .}}
+	<div class="p-2">
+		{{block "content" .}}{{end}}
+	</div>
 
-	{{block "content" .}}{{end}}
+	{{ template "includes/footer.tmpl.html" .}}
 </body>
 
 </html>

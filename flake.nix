@@ -33,6 +33,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             just
+            air
 
             # Frontend
             tailwindcss
@@ -50,12 +51,12 @@
 
           src = ./app;
 
-          vendorHash = "sha256-FmelO0wvwzOm3fzDSmAqMdwFC0YgXrCK1NCl6KM5s7I=";
-
           # Inject tailwind files.
           preBuild = ''
             ${pkgs.tailwindcss}/bin/tailwindcss -i public/in.css -o public/static/tailwind.min.css --minify
           '';
+
+          vendorHash = "sha256-9aQX0+kXwx8GSn1emokz9CdriqEHQVN+qjVotme6vu0=";
         };
 
         formatter = inputs'.alejandra.packages.default;

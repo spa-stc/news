@@ -30,6 +30,9 @@ go.work.sum
 # nix build results
 result/
 
+# air build results.
+tmp
+
 # tailwind stylesheets
 tailwind.css
 tailwind.min.css

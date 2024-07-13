@@ -8,6 +8,9 @@ import (
 type Profile struct {
 	// Port where the app is to be served.
 	Port string
+
+	// One of development, production.
+	Env string
 }
 
 // Get the profile, from viper, and validate.

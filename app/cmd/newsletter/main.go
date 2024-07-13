@@ -5,9 +5,9 @@ import (
 	"log/slog"
 	"os"
 	"os/signal"
-	"runtime/debug"
 	"syscall"
 
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/spa-stc/newsletter/public"
 	"github.com/spa-stc/newsletter/server"
 	"github.com/spa-stc/newsletter/server/profile"
@@ -65,7 +65,7 @@ func init() {
 	slog.SetDefault(logger)
 
 	viper.SetDefault("port", "3000")
-	viper.SetDefault("prometheusport", "2112")
+	viper.SetDefault("env", "production")
 	viper.SetEnvPrefix("NEWSLETTER")
 }
 
