@@ -2,8 +2,6 @@ package sqlite
 
 import (
 	"context"
-	"database/sql"
-	"strings"
 
 	"github.com/spa-stc/newsletter/store"
 )
@@ -60,7 +58,7 @@ func (db *DB) UpsertDay(ctx context.Context, day store.Day) (store.Day, error) {
 		day.Grade12,
 	}
 
-	args = append(args, args)
+	args = append(args, args...)
 
 	err := db.db.QueryRowContext(ctx, stmt, args...).
 		Scan(&day.CreatedTs, &day.UpdatedTs)
@@ -71,7 +69,7 @@ func (db *DB) UpsertDay(ctx context.Context, day store.Day) (store.Day, error) {
 	return day, nil
 }
 
-func (db *DB) FindDay(ctx context.Context, query store.FindDay) (Day, error) {
+func (db *DB) FindDay(ctx context.Context, query store.FindDay) (store.Day, error) {
 	stmt := `
 		SELECT
 			date,
@@ -85,8 +83,8 @@ func (db *DB) FindDay(ctx context.Context, query store.FindDay) (Day, error) {
 			grade_9, 
 			grade_10, 
 			grade_11,
-			grade_12
-			updated_ts, 
+			grade_12,
+			updated_ts,
 			created_ts
 		FROM 
 			days 
@@ -102,6 +100,7 @@ func (db *DB) FindDay(ctx context.Context, query store.FindDay) (Day, error) {
 		&day.Lunch,
 		&day.XPeriod,
 		&day.RotationDay,
+		&day.Location,
 		&day.Notes,
 		&day.ApInfo,
 		&day.CCInfo,

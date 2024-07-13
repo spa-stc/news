@@ -11,7 +11,7 @@ import (
 var migrations embed.FS
 
 func (d *DB) Migrate(ctx context.Context) error {
-	buf, err := migrations.ReadFile("migrations/schema.sql")
+	buf, err := migrations.ReadFile("migrations/SCHEMA.sql")
 	if err != nil {
 		return errors.Wrap(err, "error reading schema file")
 	}

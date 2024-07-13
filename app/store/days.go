@@ -1,5 +1,9 @@
 package store
 
+import (
+	"context"
+)
+
 const DayFormat = "2006-01-02"
 
 // Main Day Model, Outputted From Cron Jobs.
@@ -29,4 +33,16 @@ type FindDay struct {
 
 type FindDays struct {
 	Dates []string
+}
+
+func (s *Store) UpsertDay(ctx context.Context, day Day) (Day, error) {
+	return s.db.UpsertDay(ctx, day)
+}
+
+func (s *Store) FindDay(ctx context.Context, query FindDay) (Day, error) {
+	return s.db.FindDay(ctx, query)
+}
+
+func (s *Store) FindDays(ctx context.Context, query FindDays) ([]Day, error) {
+	return s.db.FindDays(ctx, query)
 }
