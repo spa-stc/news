@@ -11,6 +11,15 @@ type Profile struct {
 
 	// One of development, production.
 	Env string
+
+	// Database location.
+	DSN string
+
+	// Data Dir.
+	Dir string
+
+	// Driver type.
+	Driver string
 }
 
 // Get the profile, from viper, and validate.
@@ -18,6 +27,14 @@ func Get() (*Profile, error) {
 	profile := Profile{}
 	if err := viper.Unmarshal(&profile); err != nil {
 		return nil, err
+	}
+
+	if profile.Dir == "" {
+		if profile.Env == "production" {
+			profile.Dir = "/var/opt/newsletter"
+		} else {
+			profile.Dir = "./tmp"
+		}
 	}
 
 	return &profile, nil

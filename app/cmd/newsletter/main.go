@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -41,6 +42,11 @@ var rootCmd = &cobra.Command{
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
+		if err := setupDataDir(config.Dir); err != nil {
+			slog.Error("failed to setup data dir", "error", err)
+			exit()
+		}
+
 		server := server.New(ctx, config, tmpl)
 
 		server.Start(ctx)
@@ -66,6 +72,8 @@ func init() {
 
 	viper.SetDefault("port", "3000")
 	viper.SetDefault("env", "production")
+	viper.SetDefault("dsn", "data.db")
+	viper.SetDefault("driver", "sqlite")
 	viper.SetEnvPrefix("NEWSLETTER")
 }
 
@@ -74,4 +82,19 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func setupDataDir(path string) error {
+	_, err := os.Stat(path)
+	if err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			return err
+		}
+
+		if err := os.Mkdir(path, 0o770); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
