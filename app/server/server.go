@@ -16,6 +16,7 @@ import (
 	"github.com/spa-stc/newsletter/server/profile"
 	"github.com/spa-stc/newsletter/server/render"
 	"github.com/spa-stc/newsletter/server/routes/app"
+	"github.com/spa-stc/newsletter/store"
 )
 
 type Server struct {
@@ -23,9 +24,10 @@ type Server struct {
 
 	echoServer *echo.Echo
 	templ      *render.Templates
+	store      *store.Store
 }
 
-func New(ctx context.Context, p *profile.Profile, templ *render.Templates) *Server {
+func New(ctx context.Context, p *profile.Profile, templ *render.Templates, store *store.Store) *Server {
 	echoServer := echo.New()
 	echoServer.Logger.SetLevel(echolog.OFF)
 	echoServer.HideBanner = true
@@ -46,11 +48,13 @@ func New(ctx context.Context, p *profile.Profile, templ *render.Templates) *Serv
 		return c.String(http.StatusOK, "Service	Ready.")
 	})
 
-	app.NewService(p).Register(ctx, echoServer)
+	app.NewService(p, store).Register(ctx, echoServer)
 
 	s := &Server{
 		profile:    p,
 		echoServer: echoServer,
+		store:      store,
+		templ:      templ,
 	}
 
 	return s

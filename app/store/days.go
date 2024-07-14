@@ -2,6 +2,9 @@ package store
 
 import (
 	"context"
+	"time"
+
+	"github.com/spa-stc/newsletter/timeutil"
 )
 
 const DayFormat = "2006-01-02"
@@ -45,4 +48,16 @@ func (s *Store) FindDay(ctx context.Context, query FindDay) (Day, error) {
 
 func (s *Store) FindDays(ctx context.Context, query FindDays) ([]Day, error) {
 	return s.db.FindDays(ctx, query)
+}
+
+func (s *Store) GetWeek(ctx context.Context) ([]Day, error) {
+	week := timeutil.GetWeek(time.Now())
+	var weekKeys []string
+	for _, day := range week {
+		weekKeys = append(weekKeys, day.Format(DayFormat))
+	}
+
+	return s.FindDays(ctx, FindDays{
+		Dates: weekKeys,
+	})
 }

@@ -63,7 +63,7 @@ var rootCmd = &cobra.Command{
 
 		store := store.New(config, db)
 
-		server := server.New(ctx, config, tmpl)
+		server := server.New(ctx, config, tmpl, store)
 
 		worker, err := workers.New(config, store)
 		if err != nil {
