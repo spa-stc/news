@@ -23,5 +23,5 @@ func NewService(p *profile.Profile, store *store.Store) *Service {
 
 // Register the app service onto the router.
 func (s *Service) Register(ctx context.Context, echoServer *echo.Echo) {
-	echoServer.GET("/", s.index)
+	echoServer.GET("/", s.index, getPublicMiddleware()...)
 }

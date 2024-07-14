@@ -11,6 +11,11 @@ import (
 func Register(router *echo.Echo) {
 	router.Use(
 		middleware.StaticWithConfig(middleware.StaticConfig{
+			Skipper: func(c echo.Context) bool {
+				c.Response().Header().Set("Cache-Control", "public, max-age=3600, stale-if-error=60")
+
+				return false
+			},
 			HTML5:      false,
 			Root:       "static",
 			Filesystem: http.FS(public.Static),
