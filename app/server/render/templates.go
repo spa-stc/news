@@ -38,6 +38,11 @@ func getTemplates(templatesfs embed.FS) (*template.Template, error) {
 	const fsPath = "templates"
 
 	templates := template.New("")
+	templates = templates.Funcs(
+		template.FuncMap{
+			"newkv": NewKv,
+		},
+	)
 	err := fs.WalkDir(templatesfs, fsPath, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err

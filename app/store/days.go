@@ -30,6 +30,15 @@ type Day struct {
 	UpdatedTs int64
 }
 
+func (d Day) Weekday() string {
+	today, err := time.Parse(DayFormat, d.Date)
+	if err != nil {
+		panic(err)
+	}
+
+	return timeutil.GetWeekday(today)
+}
+
 type FindDay struct {
 	Date string
 }

@@ -17,3 +17,7 @@ func GetWeek(today time.Time) []time.Time {
 
 	return times
 }
+
+func GetWeekday(today time.Time) string {
+	return today.Format("Monday")
+}
