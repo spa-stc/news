@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/spa-stc/newsletter/server/render"
 	"github.com/spa-stc/newsletter/store"
 )
 
@@ -15,15 +14,11 @@ func (a *Service) index(c echo.Context) error {
 	}
 
 	data := struct {
-		render.BaseContext
+		Title string
 
 		Days []store.Day
 	}{
-		render.BaseContext{
-			Title: "Home",
-			Info:  a.info,
-		},
-
+		"Home",
 		days,
 	}
 

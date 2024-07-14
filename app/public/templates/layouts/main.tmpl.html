@@ -1,3 +1,4 @@
+{{ define "main" }}
 <!doctype html>
 
 <html lang="en">
@@ -6,20 +7,162 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>{{.Title}} - SPA Student Newsletter</title>
+	<title>{{.Data.Title}} - SPA Student Newsletter</title>
 
-	{{ template "includes/_tailwind.tmpl.html" .Info}}
+	{{- if eq .Info.Env "development" -}}
+	<link href="/static/tailwind.css" media="screen" rel="stylesheet" type="text/css">
+	{{else -}}
+	<link href="/static/tailwind.min.css" media="screen" rel="stylesheet" type="text/css">
+	{{end -}}
 </head>
 
 <body class="px-4 py-2 mx-auto bg-bg-hard dark:bg-bgDark-hard text-fg-0 dark:text-fgDark-0 lg:max-w-5xl">
-	{{ template "includes/_dark_mode_js.tmpl.html" .}}
+	<script>
+		/**
+		 * Implements a tri-state theme switch (i.e. light/dark mode) allowing an
+		 * explicit setting of one or the other, or inheriting the operating system's
+		 * default and styling accordingly.
+		 * 
+		 * The reason this is in a template file as opposed to a separate JavaScript is
+		 * so that it's parsed inline with the HTML body and given a chance to run
+		 * before the page is rendered, thereby avoiding the common pitfall of briefly
+		 * "flashing" the wrong theme when the page initially loads. Under this
+		 * framework, there's one initial call to `setThemeFromLocalStorage()` inline,
+		 * so the theme always appears correct on first render.
+		 */
 
-	{{ template "includes/navbar.tmpl.html" .}}
+		const LOCAL_STORAGE_KEY_THEME = 'theme';
+
+		const THEME_VALUE_AUTO = 'auto';
+		const THEME_VALUE_DARK = 'dark';
+		const THEME_VALUE_LIGHT = 'light';
+
+		const THEME_CLASS_DARK = 'dark';           // activates dark mode styling
+		const THEME_CLASS_DARK_OVERRIDE = 'dark_override';  // slides toggle to dark mode
+		const THEME_CLASS_LIGHT = 'light';          // here for consistency, but has no real effect
+		const THEME_CLASS_LIGHT_OVERRIDE = 'light_override'; // slides toggle to light mode
+
+		const THEME_CLASS_ALL = Object.freeze([
+			THEME_CLASS_DARK,
+			THEME_CLASS_DARK_OVERRIDE,
+			THEME_CLASS_LIGHT,
+			THEME_CLASS_LIGHT_OVERRIDE,
+		])
+
+		function setDocumentClasses(...classes) {
+			THEME_CLASS_ALL.forEach((themeClass) => {
+				if (classes.includes(themeClass)) {
+					document.documentElement.classList.add(themeClass)
+				} else {
+					document.documentElement.classList.remove(themeClass)
+				}
+			})
+		}
+
+		// Sets light or dark mode based on a preference from local storage, or if none
+		// is set there, sets based on preference from `prefers-color-scheme` CSS.
+		function setThemeFromLocalStorageOrMediaPreference() {
+			const theme = localStorage.getItem(LOCAL_STORAGE_KEY_THEME) || THEME_VALUE_AUTO
+
+			switch (theme) {
+				case THEME_VALUE_AUTO:
+					if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+						setDocumentClasses(THEME_CLASS_DARK)
+					} else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+						setDocumentClasses(THEME_CLASS_LIGHT)
+					}
+					break
+
+				case THEME_VALUE_DARK:
+					setDocumentClasses(THEME_CLASS_DARK, THEME_CLASS_DARK_OVERRIDE)
+					break
+
+				case THEME_VALUE_LIGHT:
+					setDocumentClasses(THEME_CLASS_LIGHT, THEME_CLASS_LIGHT_OVERRIDE)
+					break
+			}
+
+			console.log(`theme is: ${theme}`)
+
+			document.querySelectorAll(`.theme_toggle input[value='${theme}']`).forEach((toggle) => {
+				console.log(`set toggle`)
+				toggle.checked = true;
+			})
+		}
+
+		// See comment above, but this call must be made inline to avoid briefly
+		// flashing the wrong theme on initial page load.
+		setThemeFromLocalStorageOrMediaPreference()
+
+		// Runs on initial page load. Add change listeners to light/dark toggles that
+		// set a local storage key and trigger a theme change.
+		window.addEventListener('DOMContentLoaded', () => {
+			document.querySelectorAll('.theme_toggle input').forEach((toggle) => {
+				toggle.addEventListener('change', (e) => {
+					if (e.target.checked) {
+						if (e.target.value == THEME_VALUE_AUTO) {
+							localStorage.removeItem(LOCAL_STORAGE_KEY_THEME)
+						} else {
+							localStorage.setItem(LOCAL_STORAGE_KEY_THEME, e.target.value)
+						}
+					}
+
+					setThemeFromLocalStorageOrMediaPreference()
+				}, false)
+			})
+
+			// We already our theme "early" to avoid a flash that would occur if we only
+			// set it here on content loaded, but set it one more time so that we set
+			// the theme toggle to the appropriate value. It's not loaded yet when we
+			// set the theme the first time.
+			setThemeFromLocalStorageOrMediaPreference()
+		})
+
+		// Listen for local storage changes on our theme key. This allows one tab to be
+		// notified if the theme is changed in another and update itself accordingly.
+		window.addEventListener("storage", (e) => {
+			if (e.key == LOCAL_STORAGE_KEY_THEME) {
+				setThemeFromLocalStorageOrMediaPreference()
+			}
+		})
+
+		// Watch for OS-level changes in preference for light/dark mode. This will
+		// trigger for example if a user explicitly changes their OS-level light/dark
+		// configuration, or on sunrise/sunset if they have it set to automatic.
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+			setThemeFromLocalStorageOrMediaPreference()
+		})
+
+	</script>
+
+	<header>
+		<nav class="flex flex-wrap items-center w-full py-4 pl-2 pr-4 text-lg text-fg-1 dark:text-fgDark-1">
+			<h1 class="text-xl font-bold mr-6 underline text-fg-1 dark:text-fgDark-1">SPA Student Newsletter:</h1>
+			<div class="mx-auto"></div>
+			<div class="flex items-center flex-shrink-0 mr-6">
+				<a href="/" class="text-fg-1 dark:text-fgDark-1">Home</a>
+			</div>
+			<div class="flex items-center flex-shrink-0 mr-6">
+				<a href="/submit" class="text-fg-1 dark:text-fgDark-1">Submit</a>
+			</div>
+			<div class="flex items-center flex-shrink-0 mr-6">
+				<a href="/about" class="text-fg-1 dark:text-fgDark-1">About</a>
+			</div>
+		</nav>
+	</header>
+
+
 	<div class="p-2">
 		{{block "content" .}}{{end}}
 	</div>
 
-	{{ template "includes/footer.tmpl.html" .}}
+	<footer class="text-center text-fg-4 dark:text-fgDark-4 px-2 mt-6">
+		<p class="">Made By Lorenzo Good For The SPA STC!</p>
+		<p>Source Code Available <a href="/"
+				class="text-purple-light dark:text-purpleDark-light visited:text-purple-light dark:visited:text-purpleDark-light">Here</a>
+		</p>
+	</footer>
 </body>
 
 </html>
+{{ end }}

@@ -15,7 +15,8 @@ import (
 
 // Echo Render Wrapper.
 type Templates struct {
-	templ *template.Template
+	templates map[string]*template.Template
+	info      SiteInfo
 }
 
 func NewTemplates(profile *profile.Profile, files embed.FS) (*Templates, error) {
@@ -24,26 +25,45 @@ func NewTemplates(profile *profile.Profile, files embed.FS) (*Templates, error) 
 		return nil, errors.Wrap(err, "error parsing templates")
 	}
 
+	info := getSiteInfo(profile)
+
 	return &Templates{
-		templ: templ,
+		templates: templ,
+		info:      info,
 	}, nil
 }
 
+func getSiteInfo(p *profile.Profile) SiteInfo {
+	return SiteInfo{
+		Env: p.Env,
+	}
+}
+
 func (t *Templates) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	return t.templ.ExecuteTemplate(w, name, data)
+	injectedData := BaseContext{
+		Info: t.info,
+
+		Data: data,
+	}
+
+	if templ, ok := t.templates[name]; ok {
+		return templ.Execute(w, &injectedData)
+	}
+
+	return errors.Errorf("template does not exist: %s", name)
 }
 
 // Get templates, while preserving directory structure.
-func getTemplates(templatesfs embed.FS) (*template.Template, error) {
+func getTemplates(templatesfs embed.FS) (map[string]*template.Template, error) {
 	const fsPath = "templates"
 
-	templates := template.New("")
-	templates = templates.Funcs(
-		template.FuncMap{
-			"newkv": NewKv,
-		},
-	)
-	err := fs.WalkDir(templatesfs, fsPath, func(path string, d fs.DirEntry, err error) error {
+	layoutData, err := fs.ReadFile(templatesfs, "templates/layouts/main.tmpl.html")
+	if err != nil {
+		return nil, err
+	}
+
+	templs := make(map[string]*template.Template)
+	err = fs.WalkDir(templatesfs, fsPath, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -54,14 +74,29 @@ func getTemplates(templatesfs embed.FS) (*template.Template, error) {
 				return err
 			}
 
-			templates, err = templates.New(strings.ReplaceAll(path, fmt.Sprintf("%s/", fsPath), "")).Parse(string(data))
+			templName := strings.ReplaceAll(path, fmt.Sprintf("%s/", fsPath), "")
+			templates := template.New(templName).Funcs(
+				template.FuncMap{
+					"newkv": NewKv,
+				},
+			)
+
+			templates, err = templates.Parse(string(layoutData))
 			if err != nil {
 				return err
 			}
+
+			templates, err = templates.Parse(string(data))
+			if err != nil {
+				return err
+			}
+
+			templs[templName] = templates
+
 		}
 
 		return nil
 	})
 
-	return templates, err
+	return templs, err
 }
