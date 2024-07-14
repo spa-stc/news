@@ -43,6 +43,7 @@
             go-tools
             gotools
             gopls
+            delve
           ];
         };
 

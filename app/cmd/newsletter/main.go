@@ -98,6 +98,9 @@ func init() {
 	viper.SetDefault("env", "production")
 	viper.SetDefault("dsn", "data.db")
 	viper.SetDefault("driver", "sqlite")
+	viper.SetDefault("ical_url", "")
+	viper.SetDefault("sheet_id", "")
+	viper.SetDefault("sheet_name", "")
 	viper.SetEnvPrefix("NEWSLETTER")
 }
 

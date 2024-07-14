@@ -21,9 +21,15 @@ func New(p *profile.Profile, db *store.Store) (*Service, error) {
 		return nil, err
 	}
 
-	time := gocron.NewAtTime(0, 0, 0)
+	jobSpec := gocron.DailyJob(1, gocron.NewAtTimes(gocron.NewAtTime(0, 0, 0)))
+	if p.Env == "development" {
+		jobSpec = gocron.CronJob("* * * * *", false)
+	}
 
-	s.NewJob(gocron.DailyJob(1, gocron.NewAtTimes(time, gocron.NewTask(daily.Run, p, db))
+	s.NewJob(
+		jobSpec,
+		gocron.NewTask(daily.Run, p, db),
+	)
 
 	service := &Service{
 		p:     p,

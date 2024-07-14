@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
 
@@ -20,6 +21,12 @@ type Profile struct {
 
 	// Driver type.
 	Driver string
+
+	ICALURL string `mapstructure:"ical_url"`
+
+	SheetName string `mapstructure:"sheet_name"`
+
+	SheedID string `mapstructure:"sheet_id"`
 }
 
 // Get the profile, from viper, and validate.
@@ -35,6 +42,18 @@ func Get() (*Profile, error) {
 		} else {
 			profile.Dir = "./tmp"
 		}
+	}
+
+	if profile.ICALURL == "" {
+		return nil, errors.New("missing required field ical url")
+	}
+
+	if profile.SheedID == "" {
+		return nil, errors.New("missing required field sheet id")
+	}
+
+	if profile.SheetName == "" {
+		return nil, errors.New("missing required field sheet name")
 	}
 
 	return &profile, nil
