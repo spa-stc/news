@@ -10,9 +10,9 @@
 	<title>{{.Data.Title}} - SPA Student Newsletter</title>
 
 	{{- if eq .Info.Env "development" -}}
-	<link href="/static/tailwind.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/tailwind.css" media="screen" rel="stylesheet" type="text/css">
 	{{else -}}
-	<link href="/static/tailwind.min.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/tailwind.min.css" media="screen" rel="stylesheet" type="text/css">
 	{{end -}}
 </head>
 

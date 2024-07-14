@@ -12,10 +12,10 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	echolog "github.com/labstack/gommon/log"
 	"github.com/pkg/errors"
-	"github.com/spa-stc/newsletter/public"
 	"github.com/spa-stc/newsletter/server/profile"
 	"github.com/spa-stc/newsletter/server/render"
 	"github.com/spa-stc/newsletter/server/routes/app"
+	"github.com/spa-stc/newsletter/server/static"
 	"github.com/spa-stc/newsletter/store"
 )
 
@@ -41,8 +41,7 @@ func New(ctx context.Context, p *profile.Profile, templ *render.Templates, store
 	))
 	echoServer.Renderer = templ
 
-	fs := echo.MustSubFS(public.Static, "static")
-	echoServer.StaticFS("/static", fs)
+	static.Register(echoServer)
 
 	echoServer.GET("/healthz", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Service	Ready.")
