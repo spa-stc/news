@@ -60,6 +60,17 @@
           vendorHash = "sha256-CvxPUWjjUVmGco2r570n+cK+j+KdwuBKUCdMg9G5Q3Q=";
         };
 
+        packages.docker = pkgs.dockerTools.buildLayeredImage {
+          name = "ghcr.io/spa-stc/newsletter";
+
+          config = {
+            Cmd = ["${self'.packages.default}/bin/newsletter"];
+            Env = [
+              "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+            ];
+          };
+        };
+
         formatter = inputs'.alejandra.packages.default;
       };
     });
