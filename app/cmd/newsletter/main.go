@@ -11,6 +11,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/spa-stc/newsletter/public"
 	"github.com/spa-stc/newsletter/server"
+	"github.com/spa-stc/newsletter/server/content"
 	"github.com/spa-stc/newsletter/server/profile"
 	"github.com/spa-stc/newsletter/server/render"
 	"github.com/spa-stc/newsletter/store"
@@ -42,6 +43,12 @@ var rootCmd = &cobra.Command{
 			exit()
 		}
 
+		content, err := content.New()
+		if err != nil {
+			slog.Error("failed to parse content", "error", err)
+			exit()
+		}
+
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -63,7 +70,7 @@ var rootCmd = &cobra.Command{
 
 		store := store.New(config, db)
 
-		server := server.New(ctx, config, tmpl, store)
+		server := server.New(ctx, config, tmpl, store, content)
 
 		worker, err := workers.New(config, store)
 		if err != nil {

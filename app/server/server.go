@@ -8,10 +8,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echolog "github.com/labstack/gommon/log"
 	"github.com/pkg/errors"
+	"github.com/spa-stc/newsletter/server/content"
 	"github.com/spa-stc/newsletter/server/profile"
 	"github.com/spa-stc/newsletter/server/render"
 	"github.com/spa-stc/newsletter/server/routes/app"
@@ -27,7 +29,13 @@ type Server struct {
 	store      *store.Store
 }
 
-func New(ctx context.Context, p *profile.Profile, templ *render.Templates, store *store.Store) *Server {
+func New(
+	ctx context.Context,
+	p *profile.Profile,
+	templ *render.Templates,
+	store *store.Store,
+	content *content.Content,
+) *Server {
 	echoServer := echo.New()
 	echoServer.Logger.SetLevel(echolog.OFF)
 	echoServer.HideBanner = true
@@ -39,6 +47,7 @@ func New(ctx context.Context, p *profile.Profile, templ *render.Templates, store
 			Level: 5,
 		},
 	))
+	echoServer.Use(echoprometheus.NewMiddleware("newsletter"))
 	echoServer.Renderer = templ
 
 	static.Register(echoServer)
@@ -47,7 +56,9 @@ func New(ctx context.Context, p *profile.Profile, templ *render.Templates, store
 		return c.String(http.StatusOK, "Service	Ready.")
 	})
 
-	app.NewService(p, store).Register(ctx, echoServer)
+	echoServer.GET("/metrics", echoprometheus.NewHandler())
+
+	app.NewService(p, store, content).Register(ctx, echoServer)
 
 	s := &Server{
 		profile:    p,

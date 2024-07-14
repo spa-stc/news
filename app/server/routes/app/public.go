@@ -38,3 +38,21 @@ func (a *Service) index(c echo.Context) error {
 
 	return c.Render(http.StatusOK, "pages/index.tmpl.html", &data)
 }
+
+func (a *Service) about(c echo.Context) error {
+	content, err := a.content.Get("about.md")
+	if err != nil {
+		return err
+	}
+
+	data := struct {
+		Title string
+
+		Content string
+	}{
+		"About",
+		content,
+	}
+
+	return c.Render(http.StatusOK, "pages/about.tmpl.html", &data)
+}

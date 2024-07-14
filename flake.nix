@@ -57,7 +57,7 @@
             ${pkgs.tailwindcss}/bin/tailwindcss -i public/in.css -o public/static/tailwind.min.css --minify
           '';
 
-          vendorHash = "sha256-CvxPUWjjUVmGco2r570n+cK+j+KdwuBKUCdMg9G5Q3Q=";
+          vendorHash = "sha256-JiXYo11ciagANmmeaNLTyoIg93OENeSf7Dfhaxzyveo=";
         };
 
         packages.docker = pkgs.dockerTools.buildLayeredImage {

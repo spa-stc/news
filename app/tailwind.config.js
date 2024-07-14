@@ -1,5 +1,7 @@
+let typography = require('@tailwindcss/typography');
+
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   darkMode: 'selector',
   content: ['./app/public/templates/**/*.html'],
   theme: {
@@ -129,5 +131,6 @@ export default {
       }
     },
   },
+  plugins: [typography],
 };
 

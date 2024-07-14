@@ -1,0 +1,8 @@
+{{- template "main" . -}}
+
+{{ define "content" }}
+<article
+	class="prose prose-sm dark:prose-invert bg-bg-3 dark:bg-bgDark-3 p-2 rounded-md border border-fg-3 dark:border-fgDark-3 max-w-full">
+	{{tohtml .Data.Content}}
+</article>
+{{ end }}

@@ -77,7 +77,8 @@ func getTemplates(templatesfs embed.FS) (map[string]*template.Template, error) {
 			templName := strings.ReplaceAll(path, fmt.Sprintf("%s/", fsPath), "")
 			templates := template.New(templName).Funcs(
 				template.FuncMap{
-					"newkv": NewKv,
+					"newkv":  NewKv,
+					"tohtml": toHtml,
 				},
 			)
 
@@ -99,4 +100,8 @@ func getTemplates(templatesfs embed.FS) (map[string]*template.Template, error) {
 	})
 
 	return templs, err
+}
+
+func toHtml(s string) template.HTML {
+	return template.HTML(s)
 }
