@@ -31,7 +31,7 @@ func Get() (*Profile, error) {
 
 	if profile.Dir == "" {
 		if profile.Env == "production" {
-			profile.Dir = "/var/opt/newsletter"
+			profile.Dir = "/var/lib/newsletter"
 		} else {
 			profile.Dir = "./tmp"
 		}

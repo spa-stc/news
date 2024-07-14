@@ -14,7 +14,6 @@ func GetDriver(p *profile.Profile) (store.Driver, error) {
 
 	switch p.Driver {
 	case "sqlite":
-
 		driver, err = sqlite.NewDB(p)
 	default:
 		return nil, errors.New("unknown db driver")

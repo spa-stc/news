@@ -13,6 +13,9 @@ import (
 	"github.com/spa-stc/newsletter/server"
 	"github.com/spa-stc/newsletter/server/profile"
 	"github.com/spa-stc/newsletter/server/render"
+	"github.com/spa-stc/newsletter/store"
+	"github.com/spa-stc/newsletter/store/db"
+	"github.com/spa-stc/newsletter/workers"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -47,10 +50,30 @@ var rootCmd = &cobra.Command{
 			exit()
 		}
 
+		db, err := db.GetDriver(config)
+		if err != nil {
+			slog.Error("error initializing database", "error", err)
+			exit()
+		}
+
+		if err := db.Migrate(ctx); err != nil {
+			slog.Error("error migrating database", "error", err)
+			exit()
+		}
+
+		store := store.New(config, db)
+
 		server := server.New(ctx, config, tmpl)
+
+		worker, err := workers.New(config, store)
+		if err != nil {
+			slog.Error("error intializing workers", "error", err)
+			exit()
+		}
 
 		server.Start(ctx)
 		slog.Info("server started", "port", config.Port)
+		worker.Start()
 
 		// Listen for the graceful shutdown signal.
 		go func() {
@@ -59,6 +82,7 @@ var rootCmd = &cobra.Command{
 			<-c
 
 			server.Shutdown(ctx)
+			worker.Shutdown()
 			cancel()
 		}()
 
