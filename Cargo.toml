@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members =  ["store"]
+
+[workspace.dependencies]
+eyre = { version = "0.6.12", default-features = false, features = ["track-caller"] }
+serde = { version = "1.0.204", features = ["derive"] }
