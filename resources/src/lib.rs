@@ -2,13 +2,16 @@ use std::path::Path;
 
 use grass::OutputStyle;
 use keepcalm::Shared;
+use static_files::StaticFiles;
 use templates::Templates;
 
+pub mod static_files;
 pub mod templates;
 
 #[allow(dead_code)]
 pub struct ResourceHolder {
     templates: Templates,
+    static_files: StaticFiles,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -32,8 +35,12 @@ impl ResourceHolder {
 
         let respath = path.canonicalize()?;
 
+        let mut statics = StaticFiles::default();
+        statics.register_dir(&format!("{:?}/static", respath))?;
+
         Ok(Self {
             templates: Templates::build(&respath)?,
+            static_files: statics,
         })
     }
 }
@@ -52,14 +59,14 @@ fn compile_css(resource_path: &Path) -> Result<String, Box<grass::Error>> {
 
 pub struct Resources {
     pub templates: Shared<Templates>,
+    pub statics: Shared<StaticFiles>,
 }
-
-impl Resources {}
 
 impl From<ResourceHolder> for Resources {
     fn from(value: ResourceHolder) -> Self {
         Self {
             templates: Shared::new(value.templates),
+            statics: Shared::new(value.static_files),
         }
     }
 }
