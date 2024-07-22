@@ -30,7 +30,7 @@ impl StaticFiles {
         Ok(())
     }
 
-    pub fn register(&mut self, key: &str, extension: &str, buf: &[u8]) -> Result<(), crate::Error> {
+    pub fn register(&mut self, key: &str, extension: &str, buf: &[u8]) {
         let mime =
             mime_type_from(extension, buf).expect(&format!("mime type was not known for {}", key));
 
@@ -43,8 +43,6 @@ impl StaticFiles {
             (Bytes::from(buf.to_vec()), mime),
         );
         self.by_key.insert(key.into(), to_hash_key(hash));
-
-        Ok(())
     }
 
     pub fn register_file<P: AsRef<Path>>(
@@ -56,7 +54,7 @@ impl StaticFiles {
         let mut reader = BufReader::new(File::open(&path)?);
         let mut buf = Vec::with_capacity(1024);
         reader.read_to_end(&mut buf)?;
-        self.register(key, extension, &buf)?;
+        self.register(key, extension, &buf);
 
         Ok(())
     }
