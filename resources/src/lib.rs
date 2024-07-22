@@ -37,24 +37,13 @@ impl ResourceHolder {
 
         let mut statics = StaticFiles::default();
         statics.register_dir(&format!("{:?}/static", respath))?;
+        statics.register("styles", "css", compile_css(&respath)?.as_bytes());
 
         Ok(Self {
             templates: Templates::build(&respath)?,
             static_files: statics,
         })
     }
-}
-
-#[allow(dead_code)]
-fn compile_css(resource_path: &Path) -> Result<String, Box<grass::Error>> {
-    let opts = grass::Options::default()
-        .input_syntax(grass::InputSyntax::Scss)
-        .style(OutputStyle::Compressed)
-        .load_path(resource_path.join("css/"));
-
-    let out = grass::from_string("@use 'root'".to_owned(), &opts)?;
-
-    Ok(out)
 }
 
 pub struct Resources {
@@ -69,4 +58,15 @@ impl From<ResourceHolder> for Resources {
             statics: Shared::new(value.static_files),
         }
     }
+}
+
+fn compile_css(resource_path: &Path) -> Result<String, Box<grass::Error>> {
+    let opts = grass::Options::default()
+        .input_syntax(grass::InputSyntax::Scss)
+        .style(OutputStyle::Compressed)
+        .load_path(resource_path.join("css/"));
+
+    let out = grass::from_string("@use 'root'".to_owned(), &opts)?;
+
+    Ok(out)
 }
