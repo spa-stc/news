@@ -5,5 +5,5 @@ members =  ["store", "resources"]
 [workspace.dependencies]
 eyre = { version = "0.6.12", default-features = false, features = ["track-caller"] }
 serde = { version = "1.0.204", features = ["derive"] }
-
+tokio = { version = "1.38.1", features = ["full"] }
 thiserror = "1.0.63"
