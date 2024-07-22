@@ -12,6 +12,7 @@ pub mod templates;
 pub struct ResourceHolder {
     templates: Templates,
     static_files: StaticFiles,
+    root_static_file: StaticFiles,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -36,12 +37,16 @@ impl ResourceHolder {
         let respath = path.canonicalize()?;
 
         let mut statics = StaticFiles::default();
-        statics.register_dir(&format!("{:?}/static", respath))?;
+        statics.register_dir(respath.join("/static"))?;
         statics.register("styles", "css", compile_css(&respath)?.as_bytes());
+
+        let mut root_statics = StaticFiles::default();
+        root_statics.register_dir(respath.join("/static/root"))?;
 
         Ok(Self {
             templates: Templates::build(&respath)?,
             static_files: statics,
+            root_static_file: root_statics,
         })
     }
 }
@@ -49,6 +54,7 @@ impl ResourceHolder {
 pub struct Resources {
     pub templates: Shared<Templates>,
     pub statics: Shared<StaticFiles>,
+    pub root_statics: Shared<StaticFiles>,
 }
 
 impl From<ResourceHolder> for Resources {
@@ -56,6 +62,7 @@ impl From<ResourceHolder> for Resources {
         Self {
             templates: Shared::new(value.templates),
             statics: Shared::new(value.static_files),
+            root_statics: Shared::new(value.root_static_file),
         }
     }
 }
