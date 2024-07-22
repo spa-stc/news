@@ -1,0 +1,12 @@
+[package]
+name = "resources"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+grass = "0.13.3"
+keepcalm = "0.3.5"
+serde.workspace = true
+tera = "1.20.0"
+thiserror.workspace = true
+tracing = "0.1.40"
