@@ -1,9 +1,8 @@
 use std::str::FromStr;
 
-use sqlx::{migrate, sqlite::SqliteConnectOptions, SqlitePool};
+use sqlx::{error::ErrorKind, migrate, sqlite::SqliteConnectOptions, SqlitePool};
 
 pub mod models;
-pub mod utils;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
@@ -13,8 +12,20 @@ pub enum Error {
     NotFound,
     #[error("Insertion Conflict")]
     Conflict,
-    #[error("Sqlx Error")]
-    Sqlx(#[from] sqlx::Error),
+    #[error("Sqlx Error: {0}")]
+    Sqlx(sqlx::Error),
+}
+
+impl From<sqlx::Error> for Error {
+    fn from(err: sqlx::Error) -> Self {
+        match err {
+            sqlx::Error::RowNotFound => crate::Error::NotFound,
+            sqlx::Error::Database(dbe) if dbe.kind() == ErrorKind::UniqueViolation => {
+                crate::Error::Conflict
+            }
+            e => Error::Sqlx(e),
+        }
+    }
 }
 
 pub async fn connect(database_path: &str) -> Result<SqlitePool, sqlx::Error> {
