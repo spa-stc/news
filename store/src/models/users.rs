@@ -1,6 +1,5 @@
 use sqlx::SqliteExecutor;
 
-use crate::utils::get_dberr;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct NewUser {
@@ -68,8 +67,7 @@ impl User {
         .bind(&new.password)
         .bind(&new.is_admin)
         .fetch_one(executor)
-        .await
-        .map_err(get_dberr)?;
+        .await?;
 
         Ok(row)
     }
@@ -95,8 +93,7 @@ impl User {
         )
         .bind(id)
         .fetch_one(executor)
-        .await
-        .map_err(get_dberr)?;
+        .await?;
 
         Ok(row)
     }
@@ -137,8 +134,7 @@ impl User {
         .bind(&update.email_verified.unwrap_or(usr.email_verified))
         .bind(&update.disabled.unwrap_or(usr.disabled))
         .fetch_one(executor)
-        .await
-        .map_err(get_dberr)?;
+        .await?;
 
         Ok(row)
     }

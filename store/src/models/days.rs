@@ -2,7 +2,6 @@ use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use sqlx::{sqlite::SqliteArguments, Arguments, SqliteExecutor};
 
-use crate::utils::get_dberr;
 
 // Day model, representing a day serialized to the database.
 #[derive(Debug, sqlx::FromRow, Default, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
@@ -76,8 +75,7 @@ impl Day {
         .bind(&self.created_ts)
         .bind(&self.updated_ts)
         .execute(executor)
-        .await
-        .map_err(get_dberr)?;
+        .await?;
 
         Ok(())
     }
@@ -111,8 +109,7 @@ impl Day {
         )
         .bind(&day)
         .fetch_one(executor)
-        .await
-        .map_err(get_dberr)?;
+        .await?;
 
         Ok(day)
     }
@@ -158,10 +155,7 @@ impl Day {
             })
             .count();
 
-        let days: Vec<Day> = sqlx::query_as_with(&sql, args)
-            .fetch_all(executor)
-            .await
-            .map_err(get_dberr)?;
+        let days: Vec<Day> = sqlx::query_as_with(&sql, args).fetch_all(executor).await?;
 
         if days.len() == 0 {
             return Err(crate::Error::NotFound);
