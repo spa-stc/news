@@ -8,6 +8,7 @@ use templates::Templates;
 use tokio::sync::watch;
 use tracing::error;
 
+pub mod filters;
 pub mod static_files;
 pub mod templates;
 
@@ -48,7 +49,7 @@ impl ResourceHolder {
         root_statics.register_dir(respath.join("/static/root"))?;
 
         Ok(Self {
-            templates: Templates::build(&respath)?,
+            templates: Templates::build(&respath, statics.clone())?,
             static_files: statics,
             root_static_file: root_statics,
         })

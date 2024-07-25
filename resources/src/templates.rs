@@ -3,18 +3,22 @@ use std::{borrow::Borrow, path::Path};
 use serde::Serialize;
 use tera::{Context, Tera};
 
+use crate::{filters::StaticFileFilter, static_files::StaticFiles};
+
 pub struct Templates {
     tera: Tera,
 }
 
 impl Templates {
-    pub fn build(resource_path: &Path) -> Result<Self, crate::Error> {
-        let tera = Tera::new(
+    pub fn build(resource_path: &Path, files: StaticFiles) -> Result<Self, crate::Error> {
+        let mut tera = Tera::new(
             resource_path
                 .join("templates/**/*")
                 .to_string_lossy()
                 .borrow(),
         )?;
+
+        tera.register_filter("static", StaticFileFilter::new(files));
 
         Ok(Self { tera })
     }
