@@ -1,0 +1,26 @@
+name: pr
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read 
+  pull-requests: read
+
+jobs:
+  tests:
+    name: "Rust Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@ba0dd844c9180cbf77aa72a116d6fbc515d0e87b
+        name: Setup Nix
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Tests
+        run: nix develop -c cargo test
+
