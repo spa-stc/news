@@ -1,9 +1,10 @@
 [workspace]
 resolver = "2"
-members =  ["store", "resources"]
+members =  ["store", "resources", "scraping"]
 
 [workspace.dependencies]
 eyre = { version = "0.6.12", default-features = false, features = ["track-caller"] }
 serde = { version = "1.0.204", features = ["derive"] }
 tokio = { version = "1.38.1", features = ["full"] }
 thiserror = "1.0.63"
+chrono = { version = "0.4.38", features = ["serde"] }

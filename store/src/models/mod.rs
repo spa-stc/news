@@ -1,2 +1,2 @@
-mod days;
-mod users;
+pub mod days;
+pub mod users;
