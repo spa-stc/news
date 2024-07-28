@@ -2,6 +2,7 @@ use std::{borrow::Borrow, path::Path};
 
 use serde::Serialize;
 use tera::{Context, Tera};
+use tracing::info;
 
 use crate::{filters::StaticFileFilter, static_files::StaticFiles};
 
@@ -11,6 +12,7 @@ pub struct Templates {
 
 impl Templates {
     pub fn build(resource_path: &Path, files: StaticFiles) -> Result<Self, crate::Error> {
+        info!("building templates in: {:?}", resource_path);
         let mut tera = Tera::new(
             resource_path
                 .join("templates/**/*")

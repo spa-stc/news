@@ -3,15 +3,17 @@ use std::{
     str::FromStr,
 };
 
+use eyre::bail;
 use newsletter::{
-    config,
+    config::{self},
     web::{self, Listener},
 };
+use resources::Resources;
 use tokio::net::TcpListener;
 
 #[tokio::main]
-async fn main() -> color_eyre::Result<()> {
-    color_eyre::install()?;
+async fn main() -> eyre::Result<()> {
+    stable_eyre::install()?;
     let _ = kankyo::init();
     tracing_subscriber::fmt::init();
 
@@ -28,7 +30,23 @@ async fn main() -> color_eyre::Result<()> {
         Listener::Tcp(tcp)
     };
 
-    web::start_server(listener).await?;
+    let resources = get_res()?;
+
+    web::start_server(listener, resources).await?;
 
     Ok(())
+}
+
+fn get_res() -> eyre::Result<resources::Resources> {
+    if let Some(dir) = config::var("PUBLIC") {
+        let res = if config::is_development() {
+            Resources::new_watched(&dir)?
+        } else {
+            Resources::new(&dir)?
+        };
+
+        Ok(res)
+    } else {
+        bail!("Missing NEWSLETTER_PUBLIC environment variable while fetching resources.");
+    }
 }

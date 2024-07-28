@@ -6,7 +6,7 @@ pub fn var(var: &str) -> Option<String> {
     env::var(format!("{}_{}", PREFIX, var)).ok()
 }
 
-static DEVELOPMENT: LazyLock<bool> = LazyLock::new(|| match var("PRODUCTION") {
+static DEVELOPMENT: LazyLock<bool> = LazyLock::new(|| match var("DEVELOPMENT") {
     Some(val) => match val.to_lowercase().as_str() {
         "true" | "1" | "yes" | "y" => true,
         "false" | "0" | "no" | "n" => false,

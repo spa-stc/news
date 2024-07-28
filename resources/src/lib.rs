@@ -6,7 +6,7 @@ use notify::Watcher;
 use static_files::StaticFiles;
 use templates::Templates;
 use tokio::sync::watch;
-use tracing::error;
+use tracing::{error, info};
 
 pub mod filters;
 pub mod static_files;
@@ -35,6 +35,7 @@ pub enum Error {
 impl ResourceHolder {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
         let path = path.as_ref();
+        info!("attempting to build static directory based in: {:?}", &path);
         if !path.exists() {
             return Err(Error::DirNotFound(path.to_string_lossy().into_owned()));
         }
@@ -42,11 +43,11 @@ impl ResourceHolder {
         let respath = path.canonicalize()?;
 
         let mut statics = StaticFiles::default();
-        statics.register_dir(respath.join("/static"))?;
+        statics.register_dir(respath.join("static"))?;
         statics.register("styles", "css", compile_css(&respath)?.as_bytes());
 
         let mut root_statics = StaticFiles::default();
-        root_statics.register_dir(respath.join("/static/root"))?;
+        root_statics.register_dir(respath.join("static/root"))?;
 
         Ok(Self {
             templates: Templates::build(&respath, statics.clone())?,
@@ -56,6 +57,7 @@ impl ResourceHolder {
     }
 }
 
+#[derive(Clone)]
 pub struct Resources {
     pub templates: Shared<Templates>,
     pub statics: Shared<StaticFiles>,
@@ -125,10 +127,14 @@ impl From<SharedMut<ResourceHolder>> for Resources {
 }
 
 fn compile_css(resource_path: &Path) -> Result<String, Box<grass::Error>> {
+    let css_path = resource_path.join("css/");
+
+    info!("compiling css in {:?}", css_path);
+
     let opts = grass::Options::default()
         .input_syntax(grass::InputSyntax::Scss)
         .style(OutputStyle::Compressed)
-        .load_path(resource_path.join("css/"));
+        .load_path(css_path);
 
     let out = grass::from_string("@use 'root'".to_owned(), &opts)?;
 

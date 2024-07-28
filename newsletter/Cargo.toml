@@ -5,11 +5,15 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.5"
-color-eyre = "0.6.3"
 eyre.workspace = true
 kankyo = "0.3.0"
+lazy_static = "1.5.0"
 resources = { version = "0.1.0", path = "../resources" }
+scraping = { version = "0.1.0", path = "../scraping" }
 serde.workspace = true
+stable-eyre = "0.2.2"
+store = { version = "0.1.0", path = "../store" }
+thiserror.workspace = true
 tokio.workspace = true
 tracing.workspace = true
 tracing-subscriber = { version = "0.3.18", features = ["json"] }
