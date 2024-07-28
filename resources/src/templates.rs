@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, path::Path};
+use std::{borrow::Borrow, path::Path, sync::Arc};
 
 use serde::Serialize;
 use tera::{Context, Tera};
@@ -40,4 +40,10 @@ where
 {
     pub title: &'a str,
     pub data: A,
+    pub site_data: Arc<BaseSiteData>,
+}
+
+#[derive(Serialize)]
+pub struct BaseSiteData {
+    pub github_sha: String,
 }

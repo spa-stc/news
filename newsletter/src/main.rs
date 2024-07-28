@@ -10,6 +10,7 @@ use newsletter::{
 };
 use resources::Resources;
 use tokio::net::TcpListener;
+use tracing::info;
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
@@ -31,6 +32,8 @@ async fn main() -> eyre::Result<()> {
     };
 
     let resources = get_res()?;
+
+    info!("starting git sha: {}", env!("GIT_SHA"));
 
     web::start_server(listener, resources).await?;
 

@@ -1,15 +1,23 @@
+use std::sync::Arc;
+
 use axum::{
     http::{header::CACHE_CONTROL, StatusCode},
     response::{AppendHeaders, Html, IntoResponse},
 };
-use resources::{templates::BaseRenderContext, Resources};
+use resources::{
+    templates::{BaseRenderContext, BaseSiteData},
+    Resources,
+};
 use serde::Serialize;
+
+use crate::config;
 
 use super::error::WebResult;
 
 #[derive(Clone)]
 pub struct TemplateRenderer {
     resources: resources::Resources,
+    site_data: Arc<BaseSiteData>,
 }
 
 #[allow(dead_code)]
@@ -31,7 +39,14 @@ impl PageCachePolicy {
 
 impl TemplateRenderer {
     pub fn new(r: Resources) -> Self {
-        Self { resources: r }
+        let site_data = Arc::new(BaseSiteData {
+            github_sha: env!("GIT_SHA").into(),
+        });
+
+        Self {
+            resources: r,
+            site_data,
+        }
     }
 
     pub fn render<'a, A: Serialize + 'a>(
@@ -41,7 +56,11 @@ impl TemplateRenderer {
         title: &'a str,
         data: A,
     ) -> WebResult<impl IntoResponse + 'a> {
-        let base_context = BaseRenderContext { title, data };
+        let base_context = BaseRenderContext {
+            title,
+            data,
+            site_data: Arc::clone(&self.site_data),
+        };
 
         self.render_base(cache_policy, name, base_context)
     }
