@@ -14,4 +14,4 @@ sha2 = "0.10.8"
 tera = "1.20.0"
 thiserror.workspace = true
 tokio.workspace = true
-tracing = "0.1.40"
+tracing.workspace = true
