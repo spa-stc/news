@@ -6,12 +6,17 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>{% block title %}Needs Title{% endblock title %} - SPA Student Newsletter</title>
+	<title>{{ title }} - SPA Student Newsletter</title>
 
-	<link rel="stylesheet" href="{{ "styles" | static }}" />
+	<link rel="stylesheet" href="{{ 'styles' | static }}" />
 </head>
 
 <body>
+	{% include "includes/navbar.html" %}
+
+	<div class="main">
+		{% block content %}{% endblock content %}
+	</div>
 </body>
 
 </html>

@@ -1,0 +1,53 @@
+@use "breakpoints";
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+
+  a:visited {
+    color: var(--fg2);
+  }
+
+  a:hover {
+    color: var(--purple);
+  }
+
+  .navbar-top {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    background: var(--bg2);
+
+
+
+    .header-nav {
+      flex-direction: row;
+
+      display: flex;
+
+      a {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        text-decoration: none;
+        font-size: 1rem;
+        color: var(--fg);
+        padding-top: 1em;
+        padding-bottom: 1em;
+      }
+
+      a:visited {
+        color: var(--fg);
+      }
+
+      a:hover {
+        color: var(--purple);
+        background-color: var(--fg3);
+        color: var(--bg2);
+      }
+
+
+    }
+  }
+}
