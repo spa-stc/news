@@ -4,19 +4,37 @@ body {
   background-color: var(--bg);
   color: var(--fg);
 
+  a {
+    color: var(--purple);
+  }
+
   a:visited {
-    color: var(--fg2);
+    color: var(--purple);
   }
 
   a:hover {
-    color: var(--purple);
+    color: var(--fg2);
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: breakpoints.$sm;
+    margin: 0 auto;
+    padding: 0 1em;
+    text-align: center;
+
+    p {
+      margin: 0.25em;
+    }
   }
 
   .main {
     margin-top: 4rem;
     padding: 0 1rem;
     max-width: breakpoints.$sm;
-    margin: 4rem auto;
+    margin: 4rem auto 0 auto;
   }
 
   .days-list {
