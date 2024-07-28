@@ -11,8 +11,10 @@
 	function setTheme(dark) {
 		if (dark) {
 			document.body.classList.add('dark');
+			document.body.classList.remove('light');
 		} else {
 			document.body.classList.remove('dark');
+			document.body.classList.add('light');
 		}
 		console.log(`set dark theme: ${dark}`);
 	}

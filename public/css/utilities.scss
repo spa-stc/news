@@ -11,3 +11,19 @@
     display: inherit;
   }
 }
+
+.dark .display-dark {
+  display: inherit;
+}
+
+.dark .display-light {
+  display: none;
+}
+
+.light .display-dark {
+  display: none;
+}
+
+.light .display-light {
+  display: inherit;
+}
