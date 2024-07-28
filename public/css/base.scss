@@ -12,6 +12,50 @@ body {
     color: var(--purple);
   }
 
+  .main {
+    margin-top: 4rem;
+    padding: 0 1rem;
+    max-width: breakpoints.$sm;
+    margin: 4rem auto;
+  }
+
+  .days-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .day-display {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    max-width: breakpoints.$sm;
+    margin: 0.25em auto;
+
+    .title {
+      color: var(--fg);
+    }
+
+    .updated-at {
+      color: var(--fg3);
+    }
+
+    .item {
+      margin-top: 0.5em;
+      padding: 0.25rem 1em;
+      background-color: var(--bg2);
+      border-radius: 1rem;
+      color: var(--fg2);
+
+      .item-title {
+        color: var(--fg);
+      }
+    }
+
+    .items {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
   .navbar-top {
     background: var(--bg2);
     z-index: 800;
@@ -28,7 +72,7 @@ body {
       padding: 0 0.8rem;
 
       height: 3em;
-      max-width: breakpoints.$xl;
+      max-width: breakpoints.$sm;
 
       .item {
         height: 100%;

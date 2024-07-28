@@ -27,3 +27,12 @@
 .light .display-light {
   display: inherit;
 }
+
+.card {
+  border-color: var(--fg);
+  border-style: solid;
+  border-width: 0.19rem;
+  background-color: var(--bg4);
+  padding: 1rem;
+  border-radius: 1rem;
+}
