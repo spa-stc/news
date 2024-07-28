@@ -13,35 +13,49 @@ body {
   }
 
   .navbar-top {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100h;
     background: var(--bg2);
+    z-index: 800;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
 
-    .item {
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      text-decoration: none;
-      font-size: 1rem;
-      color: var(--fg);
-      padding-top: 1em;
-      padding-bottom: 1em;
-
-    }
-
-    .header-nav {
+    .nav-content-top {
+      display: flex;
       flex-direction: row;
 
-      display: flex;
+      margin: 0 auto;
+      padding: 0 0.8rem;
+
+      height: 3em;
+      max-width: breakpoints.$xl;
+
+      .item {
+        height: 100%;
+        text-decoration: none;
+        font-size: 1em;
+        color: var(--fg);
+        padding-left: 0.25em;
+        padding-right: 0.25em;
+
+        display: flex;
+        align-items: center;
+      }
 
       a:visited {
         color: var(--fg);
       }
 
       a:hover {
-        color: var(--purple);
+        background-color: var(--fg3);
+        color: var(--bg2);
+      }
+
+      .dark-mode-menu {
+        margin-left: auto;
+      }
+
+      .dark-mode-menu:hover {
         background-color: var(--fg3);
         color: var(--bg2);
       }
