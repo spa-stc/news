@@ -20,7 +20,7 @@ struct ResourceHolder {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Template Error")]
+    #[error("Template Error: {0}")]
     Tera(#[from] tera::Error),
     #[error("Style Error")]
     Style(#[from] Box<grass::Error>),

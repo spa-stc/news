@@ -8,7 +8,7 @@ bytes = { version = "1.6.1", features = ["serde"] }
 eyre.workspace = true
 grass = "0.13.3"
 infer = "0.16.0"
-keepcalm = "0.3.5"
+keepcalm.workspace = true
 notify = "6.1.1"
 serde.workspace = true
 sha2 = "0.10.8"

@@ -79,6 +79,10 @@ impl StaticFiles {
     pub fn get_bytes_from_key(&self, key: &str) -> Option<(Bytes, &'static str)> {
         self.files.get(key).map(|x| (x.0.clone(), x.1))
     }
+
+    pub fn keys(&self) -> Vec<&String> {
+        self.by_key.keys().collect()
+    }
 }
 
 fn mime_type_from(extension: &str, buf: &[u8]) -> Option<&'static str> {

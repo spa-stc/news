@@ -25,32 +25,19 @@ impl Templates {
         Ok(Self { tera })
     }
 
-    pub fn render<A: Serialize>(
-        &self,
-        name: &str,
-        context: BaseRenderContext<A>,
-    ) -> Result<String, crate::Error> {
-        Ok(self
-            .tera
-            .render(name, &Context::from_serialize(&context)?)?)
-    }
-
-    pub fn render_base<A: Serialize>(
-        &self,
-        name: &str,
-        context: A,
-    ) -> Result<String, crate::Error> {
+    pub fn render<A: Serialize>(&self, name: &str, context: A) -> Result<String, crate::Error> {
         Ok(self
             .tera
             .render(name, &Context::from_serialize(&context)?)?)
     }
 }
 
+#[allow(dead_code)]
 #[derive(Serialize)]
 pub struct BaseRenderContext<'a, A>
 where
     A: Serialize,
 {
-    title: &'a str,
-    data: A,
+    pub title: &'a str,
+    pub data: A,
 }

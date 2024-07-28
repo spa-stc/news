@@ -14,6 +14,9 @@ pub enum WebError {
     #[error("Invalid Header Value")]
     InvalidHeaderValue(#[from] InvalidHeaderValue),
 
+    #[error("Resource Error: {0}")]
+    Resource(#[from] resources::Error),
+
     #[error(transparent)]
     Other(#[from] eyre::Report),
 }
