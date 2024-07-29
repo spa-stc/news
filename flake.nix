@@ -13,6 +13,10 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    naersk = {
+      url = "github:nix-community/naersk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {self, ...}:
@@ -28,6 +32,20 @@
         ...
       }: let
         rustToolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
+
+        naersk = inputs.naersk.lib.${system}.override {
+          cargo = rustToolchain;
+          rustc = rustToolchain;
+        };
+
+        buildInputs = with pkgs; [
+          sqlite.dev
+          openssl
+        ];
+
+        naitiveBuildInputs = with pkgs; [
+          pkg-config
+        ];
       in {
         _module.args.pkgs = import inputs.nixpkgs {
           localSystem = system;
@@ -41,15 +59,22 @@
         };
 
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            just
-            rustToolchain
-            sqlx-cli
-            sqlite.dev
-            openssl
-            pkg-config
-            cargo-expand
-          ];
+          buildInputs = with pkgs;
+            [
+              just
+              rustToolchain
+              sqlx-cli
+              cargo-expand
+            ]
+            ++ buildInputs
+            ++ naitiveBuildInputs;
+        };
+
+        packages.default = naersk.buildPackage {
+          name = "newsletter";
+          src = ./.;
+
+          inherit buildInputs naitiveBuildInputs;
         };
 
         formatter = inputs'.alejandra.packages.default;
