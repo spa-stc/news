@@ -77,6 +77,21 @@
           inherit buildInputs naitiveBuildInputs;
         };
 
+        packages.public-dir = pkgs.runCommand "public-dir" {src = ./public;} "mkdir -p $out; cp -r $src/* $out";
+
+        packages.docker = pkgs.dockerTools.buildLayeredImage {
+          name = "newsletter-docker";
+          tag = "latest";
+
+          config = {
+            Env = [
+              "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              "NEWSLETTER_PUBLIC=${self'.packages.public-dir}"
+            ];
+            Cmd = ["${self'.packages.default}"];
+          };
+        };
+
         formatter = inputs'.alejandra.packages.default;
       };
     });
