@@ -10,8 +10,6 @@ use resources::{
 };
 use serde::Serialize;
 
-use crate::config;
-
 use super::error::WebResult;
 
 #[derive(Clone)]
@@ -39,9 +37,7 @@ impl PageCachePolicy {
 
 impl TemplateRenderer {
     pub fn new(r: Resources) -> Self {
-        let site_data = Arc::new(BaseSiteData {
-            github_sha: env!("GIT_SHA").into(),
-        });
+        let site_data = Arc::new(BaseSiteData {});
 
         Self {
             resources: r,

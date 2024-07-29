@@ -44,6 +44,4 @@ where
 }
 
 #[derive(Serialize)]
-pub struct BaseSiteData {
-    pub github_sha: String,
-}
+pub struct BaseSiteData {}

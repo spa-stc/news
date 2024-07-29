@@ -18,6 +18,8 @@ async fn main() -> eyre::Result<()> {
     let _ = kankyo::init();
     tracing_subscriber::fmt::init();
 
+    let resources = get_res()?;
+
     let listener: Listener = {
         let addr = SocketAddr::new(
             IpAddr::from_str(&config::var("HOST").unwrap_or("::".into()))?,
@@ -26,14 +28,11 @@ async fn main() -> eyre::Result<()> {
                 .parse::<u16>()?,
         );
 
+        info!("starting server at port: {}", addr.port());
         let tcp = TcpListener::bind(addr).await?;
 
         Listener::Tcp(tcp)
     };
-
-    let resources = get_res()?;
-
-    info!("starting git sha: {}", env!("GIT_SHA"));
 
     web::start_server(listener, resources).await?;
 

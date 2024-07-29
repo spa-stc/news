@@ -21,7 +21,9 @@ pub async fn start_server(listener: Listener, resources: Resources) -> Result<()
         .with_state(resources.clone());
 
     match listener {
-        Listener::Tcp(l) => axum::serve(l, app.into_make_service()).await?,
+        Listener::Tcp(l) => {
+            axum::serve(l, app.into_make_service()).await?;
+        }
     };
 
     Ok(())
