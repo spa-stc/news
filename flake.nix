@@ -41,6 +41,7 @@
             go-tools
             gotools
             gopls
+            golangci-lint
 
             postgresql
           ];
