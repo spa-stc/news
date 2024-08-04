@@ -65,6 +65,7 @@
               rustToolchain
               sqlx-cli
               cargo-expand
+              dive
             ]
             ++ buildInputs
             ++ naitiveBuildInputs;
@@ -72,6 +73,7 @@
 
         packages.default = naersk.buildPackage {
           name = "newsletter";
+          version = "0.0.0";
           src = ./.;
 
           inherit buildInputs naitiveBuildInputs;
@@ -88,7 +90,7 @@
               "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
               "NEWSLETTER_PUBLIC=${self'.packages.public-dir}"
             ];
-            Cmd = ["${self'.packages.default}"];
+            Cmd = ["${self'.packages.default}/bin/newsletter"];
           };
         };
 
