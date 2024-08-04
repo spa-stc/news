@@ -6,6 +6,6 @@ edition = "2021"
 [dependencies]
 chrono.workspace = true
 serde.workspace = true
-sqlx = { version = "0.7.4", features = ["chrono", "migrate", "runtime-tokio", "sqlite"] }
+sqlx.workspace = true
 tokio.workspace = true
 thiserror.workspace = true

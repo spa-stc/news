@@ -8,7 +8,7 @@ pub type WebResult<T> = Result<T, WebError>;
 
 #[derive(Debug, thiserror::Error)]
 pub enum WebError {
-    #[error("Store Error")]
+    #[error("Store Error: {0}")]
     Store(#[from] store::Error),
 
     #[error("Invalid Header Value")]

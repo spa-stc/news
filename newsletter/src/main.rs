@@ -9,7 +9,7 @@ use newsletter::{
     web::{self, Listener},
 };
 use resources::Resources;
-use tokio::net::TcpListener;
+use tokio::{fs, net::TcpListener};
 use tracing::info;
 
 #[tokio::main]
@@ -17,6 +17,8 @@ async fn main() -> eyre::Result<()> {
     stable_eyre::install()?;
     let _ = kankyo::init();
     tracing_subscriber::fmt::init();
+
+    let database = get_database().await?;
 
     let resources = get_res()?;
 
@@ -34,7 +36,7 @@ async fn main() -> eyre::Result<()> {
         Listener::Tcp(tcp)
     };
 
-    web::start_server(listener, resources).await?;
+    web::start_server(listener, resources, database).await?;
 
     Ok(())
 }
@@ -51,4 +53,20 @@ fn get_res() -> eyre::Result<resources::Resources> {
     } else {
         bail!("Missing NEWSLETTER_PUBLIC environment variable while fetching resources.");
     }
+}
+
+async fn get_database() -> eyre::Result<sqlx::SqlitePool> {
+    if let Some(path) = config::var("DATA_DIR") {
+        fs::create_dir_all(&path).await?;
+
+        let database = store::connect(&format!("{}/data.db", &path)).await?;
+
+        store::migrate(&database).await?;
+
+        info!("data dir located at path: {}", path);
+
+        return Ok(database);
+    }
+
+    bail!("Missing Required Value For DATA_DIR in environment.");
 }

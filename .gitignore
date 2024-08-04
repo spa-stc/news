@@ -1,6 +1,9 @@
 # env file
 .env
 
+# test data dir 
+data
+
 # direnv outputs 
 .direnv/ 
 

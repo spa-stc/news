@@ -19,8 +19,12 @@ pub enum Listener {
 }
 
 #[allow(dead_code)]
-pub async fn start_server(listener: Listener, resources: Resources) -> Result<(), eyre::Report> {
-    let app = public::routes(resources.clone())
+pub async fn start_server(
+    listener: Listener,
+    resources: Resources,
+    database: sqlx::SqlitePool,
+) -> Result<(), eyre::Report> {
+    let app = public::routes(resources.clone(), database)
         .route("/healthz", get(healthz))
         .route("/static/:file", get(serve_statics))
         .route("/:file", get(serve_root_statics))

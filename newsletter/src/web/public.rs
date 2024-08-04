@@ -1,5 +1,7 @@
 use axum::{extract::State, response::IntoResponse, routing::get, Router};
 use resources::Resources;
+use sqlx::SqlitePool;
+use store::models::days::Day;
 use tracing::instrument;
 
 use super::{
@@ -7,16 +9,37 @@ use super::{
     templates::{PageCachePolicy, TemplateRenderer},
 };
 
-pub fn routes<S>(resources: Resources) -> Router<S>
+#[derive(Clone)]
+struct PublicState {
+    pub templates: TemplateRenderer,
+    pub database: SqlitePool,
+}
+
+pub fn routes<S>(resources: Resources, database: SqlitePool) -> Router<S>
 where
     S: Clone + Send + Sync + 'static,
 {
-    Router::new()
-        .route("/", get(index))
-        .with_state(TemplateRenderer::new(resources))
+    let state = PublicState {
+        templates: TemplateRenderer::new(resources),
+        database,
+    };
+
+    Router::new().route("/", get(index)).with_state(state)
+}
+
+#[derive(serde::Serialize)]
+struct IndexData {
+    pub days: Vec<Day>,
 }
 
 #[instrument(skip_all)]
-async fn index(State(templates): State<TemplateRenderer>) -> WebResult<impl IntoResponse> {
-    templates.render(PageCachePolicy::Public, "index.html", "Home", {})
+async fn index(State(state): State<PublicState>) -> WebResult<impl IntoResponse> {
+    let days = Day::get_many(&state.database, vec![]).await?;
+
+    state.templates.render(
+        PageCachePolicy::Public,
+        "index.html",
+        "Home",
+        IndexData { days },
+    )
 }

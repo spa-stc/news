@@ -1240,6 +1240,7 @@ name = "newsletter"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "chrono",
  "eyre",
  "kankyo",
  "lazy_static",
@@ -1247,6 +1248,7 @@ dependencies = [
  "scraping",
  "serde",
  "serde_json",
+ "sqlx",
  "stable-eyre",
  "store",
  "thiserror",
