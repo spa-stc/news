@@ -42,7 +42,9 @@
             gotools
             gopls
             golangci-lint
+            go-migrate
 
+            sqlc
             postgresql
           ];
         };

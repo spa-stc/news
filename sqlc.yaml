@@ -1,0 +1,28 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries:
+      - "db/dbsqlc"
+    schema:
+        - "db/migrations"
+    gen:
+      go:
+        package: "dbsqlc"
+        sql_package: "pgx/v5"
+        out: "./db/dbsqlc"
+        emit_methods_with_db_argument: true
+        emit_params_struct_pointers: true
+        emit_result_struct_pointers: true
+
+        rename:
+          ttl: "TTL"
+
+        overrides:
+          - db_type: "timestamptz"
+            go_type: "time.Time"
+
+          - db_type: "timestamptz"
+            go_type:
+              type: "time.Time"
+              pointer: true
+            nullable: true
