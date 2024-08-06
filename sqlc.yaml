@@ -11,8 +11,6 @@ sql:
         sql_package: "pgx/v5"
         out: "./db/dbsqlc"
         emit_methods_with_db_argument: true
-        emit_params_struct_pointers: true
-        emit_result_struct_pointers: true
 
         rename:
           ttl: "TTL"
@@ -26,3 +24,24 @@ sql:
               type: "time.Time"
               pointer: true
             nullable: true
+
+          - db_type: "date"
+            go_type: "time.Time"
+
+          - db_type: "date"
+            go_type:
+              type: "time.Time"
+              pointer: true
+            nullable: true
+
+          - db_type: "uuid"
+            go_type: 
+              type: "uuid.UUID"
+
+          - db_type: "uuid"
+            go_type: 
+              type: "uuid.UUID"
+              pointer: true
+            nullable: true
+
+
