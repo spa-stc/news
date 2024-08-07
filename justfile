@@ -14,3 +14,6 @@ run_migrations:
 
 generate:
 	sqlc generate
+
+build: 
+	go build ./...
