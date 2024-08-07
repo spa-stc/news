@@ -49,6 +49,8 @@ func TestDaysResource(t *testing.T) {
 			Grade10:     "grade_10",
 			Grade11:     "grade_11",
 			Grade12:     "grade_12",
+			CreatedTS:   time.UnixMicro(0),
+			UpdatedTS:   time.UnixMicro(0),
 		}
 
 		dates := []time.Time{
@@ -59,8 +61,6 @@ func TestDaysResource(t *testing.T) {
 
 		expected := sliceutil.Map(dates, func(s time.Time) resource.Day {
 			daybase.Date = s
-			daybase.CreatedTS = s
-			daybase.UpdatedTS = s
 
 			return daybase
 		})
@@ -68,8 +68,8 @@ func TestDaysResource(t *testing.T) {
 		days, err := resource.GetManyDays(ctx, tx, dates)
 
 		days = sliceutil.Map(days, func(d resource.Day) resource.Day {
-			d.CreatedTS = d.Date
-			d.UpdatedTS = d.Date
+			d.CreatedTS = time.UnixMicro(0)
+			d.UpdatedTS = time.UnixMicro(0)
 
 			return d
 		})
