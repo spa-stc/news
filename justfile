@@ -10,7 +10,7 @@ create_migration NAME:
 	migrate create -ext sql -dir db/migrations -seq {{NAME}}
 
 run_migrations:
-	migrate -path db/migrations -database $NEWSLETTER_DATABASE_URL up
+	migrate -path migrations -database $NEWSLETTER_DATABASE_URL up
 
 generate:
 	sqlc generate
