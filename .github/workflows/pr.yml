@@ -56,6 +56,24 @@ jobs:
   tests:
     name: "Go Tests"
     runs-on: ubuntu-latest
+    env:
+      NEWSLETTER_DATABASE_URL: 'postgres://postgres:1234@localhost:5432?sslmode=disable'
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: '1234'
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -66,6 +84,9 @@ jobs:
           extra_nix_config: |
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
             substituters = https://cache.nixos.org/ https://cache.garnix.io
+
+      - name: Database Up
+        run: nix develop -c just run_migrations
 
       - name: Run Tests
         run: nix develop -c go test ./...
