@@ -47,7 +47,7 @@ INSERT INTO days (
 	@grade_11,
 	@grade_12
 ) 
-ON CONFLICT DO UPDATE 
+ON CONFLICT (date) DO UPDATE 
 SET 
 	lunch = @lunch,
 	x_period = @x_period,

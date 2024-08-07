@@ -28,7 +28,7 @@ type Day struct {
 
 func fromSqlcDay(d dbsqlc.Day) Day {
 	return Day{
-		Date:        d.Date.Local(),
+		Date:        d.Date.UTC(),
 		Lunch:       d.Lunch,
 		XPeriod:     d.XPeriod,
 		RotationDay: d.RotationDay,
@@ -53,6 +53,10 @@ func GetManyDays(ctx context.Context, e db.Executor, dates []time.Time) ([]Day, 
 		return nil, db.HandleError(err)
 	}
 
+	if len(days) == 0 {
+		return nil, db.ErrNotFound
+	}
+
 	return sliceutil.Map(days, fromSqlcDay), nil
 }
 
@@ -62,7 +66,7 @@ func BatchUpsertDays(ctx context.Context, e db.Executor, days []Day) error {
 	err := db.ExecInTx(ctx, e, func(tx db.Tx) error {
 		for _, d := range days {
 			if _, err := sqlc.UpsertDay(ctx, tx, dbsqlc.UpsertDayParams{
-				Date:        d.Date.Local(),
+				Date:        d.Date.UTC(),
 				Lunch:       d.Lunch,
 				XPeriod:     d.XPeriod,
 				RotationDay: d.RotationDay,

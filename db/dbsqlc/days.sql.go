@@ -95,7 +95,7 @@ INSERT INTO days (
 	$11,
 	$12
 ) 
-ON CONFLICT DO UPDATE 
+ON CONFLICT (date) DO UPDATE 
 SET 
 	lunch = $2,
 	x_period = $3,

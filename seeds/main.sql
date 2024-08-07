@@ -1,0 +1,56 @@
+INSERT INTO days (
+	date, 
+	lunch, 
+	x_period, 
+	rotation_day, 
+	location, 
+	notes, 
+	ap_info, 
+	cc_info, 
+	grade_9, 
+	grade_10, 
+	grade_11, 
+	grade_12
+) VALUES 
+(
+	'2024-12-18', 
+	'lunch', 
+	'x_period', 
+	'rotation_day', 
+	'location',
+	'notes', 
+	'ap_info', 
+	'cc_info', 
+	'grade_9', 
+	'grade_10', 
+	'grade_11', 
+	'grade_12'
+),
+(
+	'2024-12-19', 
+	'lunch', 
+	'x_period', 
+	'rotation_day', 
+	'location',
+	'notes', 
+	'ap_info', 
+	'cc_info', 
+	'grade_9', 
+	'grade_10', 
+	'grade_11', 
+	'grade_12'
+),
+(
+	'2024-12-20', 
+	'lunch', 
+	'x_period', 
+	'rotation_day', 
+	'location',
+	'notes', 
+	'ap_info', 
+	'cc_info', 
+	'grade_9', 
+	'grade_10', 
+	'grade_11', 
+	'grade_12'
+);
