@@ -37,22 +37,6 @@ func TestDaysResource(t *testing.T) {
 	})
 
 	t.Run("test_query", func(t *testing.T) {
-		daybase := resource.Day{
-			Lunch:       "lunch",
-			XPeriod:     "x_period",
-			RotationDay: "rotation_day",
-			Location:    "location",
-			Notes:       "notes",
-			ApInfo:      "ap_info",
-			CcInfo:      "cc_info",
-			Grade9:      "grade_9",
-			Grade10:     "grade_10",
-			Grade11:     "grade_11",
-			Grade12:     "grade_12",
-			CreatedTS:   time.UnixMicro(0),
-			UpdatedTS:   time.UnixMicro(0),
-		}
-
 		dates := []time.Time{
 			parseDate(t, "2024-12-18"),
 			parseDate(t, "2024-12-19"),
@@ -60,9 +44,22 @@ func TestDaysResource(t *testing.T) {
 		}
 
 		expected := sliceutil.Map(dates, func(s time.Time) resource.Day {
-			daybase.Date = s
-
-			return daybase
+			return resource.Day{
+				Date:        s,
+				Lunch:       "lunch",
+				XPeriod:     "x_period",
+				RotationDay: "rotation_day",
+				Location:    "location",
+				Notes:       "notes",
+				ApInfo:      "ap_info",
+				CcInfo:      "cc_info",
+				Grade9:      "grade_9",
+				Grade10:     "grade_10",
+				Grade11:     "grade_11",
+				Grade12:     "grade_12",
+				CreatedTS:   time.UnixMicro(0),
+				UpdatedTS:   time.UnixMicro(0),
+			}
 		})
 
 		days, err := resource.GetManyDays(ctx, tx, dates)

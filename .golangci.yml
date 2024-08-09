@@ -156,6 +156,8 @@ linters-settings:
       - os.WriteFile
       - prometheus.ExponentialBuckets.*
       - prometheus.LinearBuckets
+      - make
+      - context.WithTimeout
 
   nakedret:
     # Make an issue if func has more lines of code than this setting, and it has naked returns.
