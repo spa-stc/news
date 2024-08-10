@@ -14,37 +14,34 @@ import (
 )
 
 type Job struct {
-	db          db.Executor
-	timeGen     service.TimeGenerator
-	lunchGetter LunchGetter
-	infoGetter  OtherInfoGetter
-	notifer     cron.StatusNotifer
+	db      db.Executor
+	timeGen service.TimeGenerator
+	getter  DataGetter
+	notifer cron.StatusNotifer
 }
 
 func New(db db.Executor,
 	timeGen service.TimeGenerator,
-	lunchGetter LunchGetter,
-	infoGetter OtherInfoGetter,
+	getter DataGetter,
 	notifer cron.StatusNotifer,
 ) *Job {
 	return &Job{
-		db:          db,
-		timeGen:     timeGen,
-		lunchGetter: lunchGetter,
-		infoGetter:  infoGetter,
-		notifer:     notifer,
+		db:      db,
+		timeGen: timeGen,
+		getter:  getter,
+		notifer: notifer,
 	}
 }
 
 func (j *Job) Run(ctx context.Context) error {
 	dates := timeutil.GetWeek(time.Sunday, j.timeGen.NowUTC())
 
-	lunches, err := j.lunchGetter.Get(ctx)
+	lunches, err := j.getter.GetLunch(ctx)
 	if err != nil {
 		return fmt.Errorf("error getting lunch: %w", err)
 	}
 
-	otherInfo, err := j.infoGetter.Get(ctx)
+	otherInfo, err := j.getter.GetInfo(ctx)
 	if err != nil {
 		return fmt.Errorf("error getting other info: %w", err)
 	}

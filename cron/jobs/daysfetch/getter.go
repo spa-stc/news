@@ -6,14 +6,56 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/apognu/gocal"
 	"github.com/gocarina/gocsv"
 )
 
-const CSVDateFormat = "1/2/2006"
-
-type OtherInfoGetter interface {
-	Get(ctx context.Context) (map[string]CsvData, error)
+type DataGetter interface {
+	GetLunch(ctx context.Context) (map[string]string, error)
+	GetInfo(ctx context.Context) (map[string]CsvData, error)
 }
+
+type Getter struct {
+	sheetID   string
+	sheetName string
+	lunchURL  string
+}
+
+func (i *Getter) GetLunch(ctx context.Context) (map[string]string, error) {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, i.lunchURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating http request: %w", err)
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error making http request: %w", err)
+	}
+	defer res.Body.Close()
+
+	cal := gocal.NewParser(res.Body)
+
+	cal.SkipBounds = true
+
+	err = cal.Parse()
+	if err != nil {
+		return nil, err
+	}
+
+	lunchData := make(map[string]string)
+	for _, v := range cal.Events {
+		startString := v.Start.UTC().Format(time.DateOnly)
+
+		lunchData[startString] = v.Description
+	}
+
+	return lunchData, nil
+}
+
+const CSVDateFormat = "1/2/2006"
 
 type CsvData struct {
 	Date     string `csv:"DATE"`
@@ -28,26 +70,14 @@ type CsvData struct {
 	CcInfo   string `csv:"CC TOPICS"`
 }
 
-type OtherInfoCSVGetter struct {
-	sheetID   string
-	sheetName string
-}
-
-func NewCsvGetter(sheetID string, sheetName string) *OtherInfoCSVGetter {
-	return &OtherInfoCSVGetter{
-		sheetID:   sheetID,
-		sheetName: sheetName,
-	}
-}
-
-func (s *OtherInfoCSVGetter) Get(ctx context.Context) (map[string]CsvData, error) {
+func (i *Getter) GetInfo(ctx context.Context) (map[string]CsvData, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
 	queryurl := fmt.Sprintf(
 		"https://docs.google.com/spreadsheets/d/%s/gviz/tq?tqx=out:csv&sheet=%s",
-		s.sheetID,
-		s.sheetName)
+		i.sheetID,
+		i.sheetName)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, queryurl, nil)
 	if err != nil {

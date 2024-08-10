@@ -13,19 +13,16 @@ import (
 	"stpaulacademy.tech/newsletter/util/testutil"
 )
 
-type TestLunchGetter struct {
+type TestGetter struct {
 	lunches map[string]string
+	info    map[string]daysfetch.CsvData
 }
 
-func (t *TestLunchGetter) Get(_ context.Context) (map[string]string, error) {
+func (t *TestGetter) GetLunch(_ context.Context) (map[string]string, error) {
 	return t.lunches, nil
 }
 
-type TestOtherInfoGetter struct {
-	info map[string]daysfetch.CsvData
-}
-
-func (t *TestOtherInfoGetter) Get(_ context.Context) (map[string]daysfetch.CsvData, error) {
+func (t *TestGetter) GetInfo(_ context.Context) (map[string]daysfetch.CsvData, error) {
 	return t.info, nil
 }
 
@@ -93,15 +90,12 @@ func TestDaysUpdateJob(t *testing.T) {
 
 	lunches, csvdata, expected := buildFixtures(dates)
 
-	lunchgetter := &TestLunchGetter{
+	getter := &TestGetter{
+		info:    csvdata,
 		lunches: lunches,
 	}
 
-	otherinfogetter := &TestOtherInfoGetter{
-		info: csvdata,
-	}
-
-	job := daysfetch.New(executor, timegen, lunchgetter, otherinfogetter, nil)
+	job := daysfetch.New(executor, timegen, getter, nil)
 
 	err := job.Run(ctx)
 	require.NoError(t, err)
