@@ -7,17 +7,39 @@ package dbsqlc
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 )
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, name, email, password_hash, is_admin, status, created_ts, updated_ts FROM users WHERE email = $1
+SELECT 
+	users.id, users.name, users.email, users.password_hash, users.is_admin, users.status, users.created_ts, users.updated_ts, 
+	COUNT(email_verifications.id) AS verification_attempts 
+FROM 
+	users LEFT JOIN email_verifications ON user_id = users.id 
+WHERE 
+	users.email = $1
+GROUP BY 
+	users.id 
+LIMIT 1
 `
 
-func (q *Queries) GetUserByEmail(ctx context.Context, db DBTX, email string) (User, error) {
+type GetUserByEmailRow struct {
+	ID                   uuid.UUID
+	Name                 string
+	Email                string
+	PasswordHash         string
+	IsAdmin              bool
+	Status               UserStatus
+	CreatedTs            time.Time
+	UpdatedTs            time.Time
+	VerificationAttempts int64
+}
+
+func (q *Queries) GetUserByEmail(ctx context.Context, db DBTX, email string) (GetUserByEmailRow, error) {
 	row := db.QueryRow(ctx, getUserByEmail, email)
-	var i User
+	var i GetUserByEmailRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -27,17 +49,39 @@ func (q *Queries) GetUserByEmail(ctx context.Context, db DBTX, email string) (Us
 		&i.Status,
 		&i.CreatedTs,
 		&i.UpdatedTs,
+		&i.VerificationAttempts,
 	)
 	return i, err
 }
 
 const getUserByID = `-- name: GetUserByID :one
-SELECT id, name, email, password_hash, is_admin, status, created_ts, updated_ts FROM users WHERE id = $1
+SELECT 
+	users.id, users.name, users.email, users.password_hash, users.is_admin, users.status, users.created_ts, users.updated_ts, 
+	COUNT(email_verifications.id) AS verification_attempts 
+FROM 
+	users LEFT JOIN email_verifications ON user_id = users.id 
+WHERE 
+	users.id = $1
+GROUP BY 
+	users.id
+LIMIT 1
 `
 
-func (q *Queries) GetUserByID(ctx context.Context, db DBTX, id uuid.UUID) (User, error) {
+type GetUserByIDRow struct {
+	ID                   uuid.UUID
+	Name                 string
+	Email                string
+	PasswordHash         string
+	IsAdmin              bool
+	Status               UserStatus
+	CreatedTs            time.Time
+	UpdatedTs            time.Time
+	VerificationAttempts int64
+}
+
+func (q *Queries) GetUserByID(ctx context.Context, db DBTX, id uuid.UUID) (GetUserByIDRow, error) {
 	row := db.QueryRow(ctx, getUserByID, id)
-	var i User
+	var i GetUserByIDRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -47,6 +91,7 @@ func (q *Queries) GetUserByID(ctx context.Context, db DBTX, id uuid.UUID) (User,
 		&i.Status,
 		&i.CreatedTs,
 		&i.UpdatedTs,
+		&i.VerificationAttempts,
 	)
 	return i, err
 }
@@ -91,4 +136,38 @@ func (q *Queries) InsertUser(ctx context.Context, db DBTX, arg InsertUserParams)
 		&i.UpdatedTs,
 	)
 	return i, err
+}
+
+const updateUserByID = `-- name: UpdateUserByID :exec
+UPDATE 
+	users 
+SET 
+	status = CASE WHEN $1::boolean 
+		THEN $2::user_status ELSE status END,
+
+	password_hash = CASE WHEN $3::boolean
+		THEN $4::VARCHAR ELSE password_hash END, 
+
+	updated_ts = NOW()
+WHERE 
+	id = $5
+`
+
+type UpdateUserByIDParams struct {
+	StatusDoUpdate       bool
+	Status               UserStatus
+	PasswordHashDoUpdate bool
+	PasswordHash         string
+	ID                   uuid.UUID
+}
+
+func (q *Queries) UpdateUserByID(ctx context.Context, db DBTX, arg UpdateUserByIDParams) error {
+	_, err := db.Exec(ctx, updateUserByID,
+		arg.StatusDoUpdate,
+		arg.Status,
+		arg.PasswordHashDoUpdate,
+		arg.PasswordHash,
+		arg.ID,
+	)
+	return err
 }

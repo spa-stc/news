@@ -36,3 +36,14 @@ CREATE TABLE IF NOT EXISTS users (
 	created_ts TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 	updated_ts TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS email_verifications (
+	id UUID PRIMARY KEY NOT NULL,
+
+	used BOOLEAN NOT NULL DEFAULT FALSE,
+	user_id UUID NOT NULL REFERENCES users (id), 
+
+	created_ts TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX email_verifications_users_idx ON email_verifications (user_id);

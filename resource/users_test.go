@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"stpaulacademy.tech/newsletter/db"
 	"stpaulacademy.tech/newsletter/resource"
+	"stpaulacademy.tech/newsletter/util/passwordutil"
 	"stpaulacademy.tech/newsletter/util/testutil"
 )
 
@@ -16,14 +17,15 @@ func TestUsersResource(t *testing.T) {
 	ctx := testutil.Setup(t)
 
 	seededUser := resource.User{
-		ID:           uuid.MustParse("aea38951-ca26-4e76-ad65-d5296a0095e6"),
-		Name:         "name",
-		Email:        "email",
-		PasswordHash: "password_hash",
-		IsAdmin:      false,
-		Status:       resource.UserStatusUnverified,
-		CreatedTS:    time.UnixMicro(0),
-		UpdatedTS:    time.UnixMicro(0),
+		ID:                   uuid.MustParse("aea38951-ca26-4e76-ad65-d5296a0095e6"),
+		Name:                 "name",
+		Email:                "email",
+		PasswordHash:         "password_hash",
+		IsAdmin:              false,
+		Status:               resource.UserStatusUnverified,
+		CreatedTS:            time.UnixMicro(0),
+		UpdatedTS:            time.UnixMicro(0),
+		VerificationAttempts: 3,
 	}
 
 	t.Run("test_get_id_not_found", func(t *testing.T) {
@@ -86,5 +88,24 @@ func TestUsersResource(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Equal(t, user, found)
+	})
+
+	t.Run("test_users_update", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
+
+		err := resource.UpdateUserByID(ctx, tx, seededUser.ID, resource.UpdateUser{
+			Password: testutil.Pointer("hi"),
+			Status:   testutil.Pointer(resource.UserStatusVerified),
+		})
+		require.NoError(t, err)
+
+		usr, err := resource.GetUserByID(ctx, tx, seededUser.ID)
+		require.NoError(t, err)
+
+		ok, err := passwordutil.VerifyPassword(usr.PasswordHash, "hi")
+		require.NoError(t, err)
+		require.True(t, ok)
+
+		require.Equal(t, resource.UserStatusVerified, usr.Status)
 	})
 }

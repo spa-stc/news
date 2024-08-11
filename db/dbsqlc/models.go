@@ -72,6 +72,13 @@ type Day struct {
 	UpdatedTs   time.Time
 }
 
+type EmailVerification struct {
+	ID        uuid.UUID
+	Used      bool
+	UserID    uuid.UUID
+	CreatedTs time.Time
+}
+
 type User struct {
 	ID           uuid.UUID
 	Name         string
