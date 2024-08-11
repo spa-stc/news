@@ -19,9 +19,9 @@ func parseDate(t *testing.T, s string) time.Time {
 func TestDaysResource(t *testing.T) {
 	t.Parallel()
 	ctx := testutil.Setup(t)
-	tx := testutil.TestTx(ctx, t)
 
 	t.Run("test_query_not_found", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
 		_, err := resource.GetManyDays(ctx, tx, []time.Time{
 			parseDate(t, "2022-07-03"),
 		})
@@ -29,6 +29,7 @@ func TestDaysResource(t *testing.T) {
 	})
 
 	t.Run("test_query_incomplete", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
 		_, err := resource.GetManyDays(ctx, tx, []time.Time{
 			testutil.ParseDate(t, "2022-07-03"),
 			testutil.ParseDate(t, "2024-12-18"),
@@ -37,6 +38,7 @@ func TestDaysResource(t *testing.T) {
 	})
 
 	t.Run("test_query", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
 		dates := []time.Time{
 			testutil.ParseDate(t, "2024-12-18"),
 			testutil.ParseDate(t, "2024-12-19"),

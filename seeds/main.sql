@@ -54,3 +54,19 @@ INSERT INTO days (
 	'grade_11', 
 	'grade_12'
 );
+
+INSERT INTO users (
+	id, 
+	name, 
+	email,
+	password_hash, 
+	is_admin,
+	status
+) VALUES (
+	'aea38951-ca26-4e76-ad65-d5296a0095e6',
+	'name',
+	'email',
+	'password_hash',
+	false,
+	'unverified'	
+);

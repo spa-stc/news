@@ -43,6 +43,7 @@
             gopls
             golangci-lint
             go-migrate
+            delve
 
             sqlc
             postgresql

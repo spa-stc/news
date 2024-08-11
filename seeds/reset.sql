@@ -1,1 +1,2 @@
 TRUNCATE TABLE days;
+TRUNCATE TABLE users;

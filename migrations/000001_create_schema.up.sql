@@ -16,3 +16,23 @@ CREATE TABLE IF NOT EXISTS days (
 	created_ts TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 	updated_ts TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TYPE user_status AS ENUM (
+	'verified', 
+	'unverified', 
+	'banned'
+);
+
+CREATE TABLE IF NOT EXISTS users (
+	id UUID PRIMARY KEY NOT NULL,
+	name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL UNIQUE,
+
+	password_hash VARCHAR NOT NULL, 
+
+	is_admin BOOLEAN NOT NULL DEFAULT false,
+	status user_status NOT NULL DEFAULT 'unverified',
+
+	created_ts TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+	updated_ts TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
