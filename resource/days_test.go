@@ -30,17 +30,17 @@ func TestDaysResource(t *testing.T) {
 
 	t.Run("test_query_incomplete", func(t *testing.T) {
 		_, err := resource.GetManyDays(ctx, tx, []time.Time{
-			parseDate(t, "2022-07-03"),
-			parseDate(t, "2024-12-18"),
+			testutil.ParseDate(t, "2022-07-03"),
+			testutil.ParseDate(t, "2024-12-18"),
 		})
 		require.NoError(t, err)
 	})
 
 	t.Run("test_query", func(t *testing.T) {
 		dates := []time.Time{
-			parseDate(t, "2024-12-18"),
-			parseDate(t, "2024-12-19"),
-			parseDate(t, "2024-12-20"),
+			testutil.ParseDate(t, "2024-12-18"),
+			testutil.ParseDate(t, "2024-12-19"),
+			testutil.ParseDate(t, "2024-12-20"),
 		}
 
 		expected := sliceutil.Map(dates, func(s time.Time) resource.Day {

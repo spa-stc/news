@@ -9,8 +9,13 @@ import (
 )
 
 type Error struct {
-	Message    string
-	StatusCode int
+	Message    string `json:"message"`
+	Data       any    `json:"data"`
+	StatusCode int    `json:"-"`
+}
+
+func (e Error) Error() string {
+	return e.Message
 }
 
 type Handler func(w http.ResponseWriter, r *http.Request) error
@@ -19,11 +24,10 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err := h(w, r)
 	if err != nil {
 		webErr := mapWebError(err)
-		w.WriteHeader(webErr.StatusCode)
-		if _, err := w.Write([]byte(webErr.Message)); err != nil {
-			slog.ErrorContext(r.Context(), "failed to write http error body", "err", err)
-			return
+		if err := Encode(w, webErr.StatusCode, &webErr); err != nil {
+			slog.Error("failed to send web error value", "err", err)
 		}
+		return
 	}
 }
 
@@ -33,6 +37,11 @@ func mapWebError(err error) Error {
 			Message:    "Not Found",
 			StatusCode: http.StatusNotFound,
 		}
+	}
+
+	var webErr Error
+	if errors.As(err, &webErr) {
+		return webErr
 	}
 
 	return Error{
