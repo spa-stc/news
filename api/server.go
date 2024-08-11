@@ -7,10 +7,12 @@ import (
 	"stpaulacademy.tech/newsletter/db"
 	"stpaulacademy.tech/newsletter/util/service"
 	"stpaulacademy.tech/newsletter/web"
+	"stpaulacademy.tech/newsletter/web/middleware"
 )
 
 func NewServer(timegetter service.TimeGenerator, db db.Executor) http.Handler {
 	r := chi.NewMux()
+	r.Use(middleware.Recover)
 
 	r.Method(http.MethodGet, "/healthz", handleHealthZ())
 	r.Method(http.MethodGet, "/week", handleGetWeek(db, timegetter))
