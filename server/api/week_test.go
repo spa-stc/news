@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"stpaulacademy.tech/newsletter/api"
+	"stpaulacademy.tech/newsletter/server/api"
 	"stpaulacademy.tech/newsletter/util/sliceutil"
 	"stpaulacademy.tech/newsletter/util/testutil"
 )

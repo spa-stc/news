@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"stpaulacademy.tech/newsletter/api"
+	"stpaulacademy.tech/newsletter/server/api"
 	"stpaulacademy.tech/newsletter/util/testutil"
 )
 
