@@ -9,7 +9,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"stpaulacademy.tech/newsletter/api"
-	"stpaulacademy.tech/newsletter/resource"
 	"stpaulacademy.tech/newsletter/util/sliceutil"
 	"stpaulacademy.tech/newsletter/util/testutil"
 )
@@ -39,8 +38,8 @@ func TestGetWeek(t *testing.T) {
 			testutil.ParseDate(t, "2024-12-20"),
 		}
 
-		expected := sliceutil.Map(dates, func(s time.Time) resource.Day {
-			return resource.Day{
+		expected := sliceutil.Map(dates, func(s time.Time) api.Day {
+			return api.Day{
 				Date:        s,
 				Lunch:       "lunch",
 				XPeriod:     "x_period",
@@ -58,7 +57,7 @@ func TestGetWeek(t *testing.T) {
 			}
 		})
 
-		found := sliceutil.Map(res.Days, func(t resource.Day) resource.Day {
+		found := sliceutil.Map(res.Days, func(t api.Day) api.Day {
 			t.CreatedTS = time.UnixMicro(0)
 			t.UpdatedTS = time.UnixMicro(0)
 

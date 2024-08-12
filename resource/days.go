@@ -10,20 +10,20 @@ import (
 )
 
 type Day struct {
-	Date        time.Time `json:"date"`
-	Lunch       string    `json:"lunch"`
-	XPeriod     string    `json:"x_period"`
-	RotationDay string    `json:"r_day"`
-	Location    string    `json:"location"`
-	Notes       string    `json:"notes"`
-	ApInfo      string    `json:"ap_info"`
-	CcInfo      string    `json:"cc_info"`
-	Grade9      string    `json:"grade_9"`
-	Grade10     string    `json:"grade_10"`
-	Grade11     string    `json:"grade_11"`
-	Grade12     string    `json:"grade_12"`
-	CreatedTS   time.Time `json:"created_ts"`
-	UpdatedTS   time.Time `json:"updated_ts"`
+	Date        time.Time
+	Lunch       string
+	XPeriod     string
+	RotationDay string
+	Location    string
+	Notes       string
+	ApInfo      string
+	CcInfo      string
+	Grade9      string
+	Grade10     string
+	Grade11     string
+	Grade12     string
+	CreatedTS   time.Time
+	UpdatedTS   time.Time
 }
 
 func fromSqlcDay(d dbsqlc.Day) Day {

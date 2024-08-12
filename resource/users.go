@@ -20,21 +20,21 @@ const (
 )
 
 type NewUser struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Name     string
+	Email    string
+	Password string
 }
 
 type User struct {
-	ID                   uuid.UUID  `json:"id"`
-	Name                 string     `json:"name"`
-	Email                string     `json:"email"`
-	PasswordHash         string     `json:"-"`
-	IsAdmin              bool       `json:"is_admin"`
-	Status               UserStatus `json:"user_status"`
-	VerificationAttempts int64      `json:"-"`
-	CreatedTS            time.Time  `json:"created_ts"`
-	UpdatedTS            time.Time  `json:"updated_ts"`
+	ID                   uuid.UUID
+	Name                 string
+	Email                string
+	PasswordHash         string
+	IsAdmin              bool
+	Status               UserStatus
+	VerificationAttempts int64
+	CreatedTS            time.Time
+	UpdatedTS            time.Time
 }
 
 type UpdateUser struct {
