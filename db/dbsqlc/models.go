@@ -74,6 +74,7 @@ type Day struct {
 
 type EmailVerification struct {
 	ID        uuid.UUID
+	Secret    string
 	Used      bool
 	UserID    uuid.UUID
 	CreatedTs time.Time
