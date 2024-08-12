@@ -83,7 +83,7 @@ func (i *Getter) GetInfo(ctx context.Context) (map[string]CsvData, error) {
 	defer cancel()
 
 	queryurl := fmt.Sprintf(
-		"https://docs.google.com/spreadsheets/d/1EH8eAXgtaCzxBQWmk1yjBIuKD_CtZlsUDimHUFyoZs8/export?format=csv&id=%s&gid=%s",
+		"https://docs.google.com/spreadsheets/d/%s/export?format=csv&gid=%s",
 		i.sheetID, i.sheetGID)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, queryurl, nil)
