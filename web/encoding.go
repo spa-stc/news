@@ -19,8 +19,32 @@ func Encode[T any](w http.ResponseWriter, status int, v T) error {
 func Decode[T any](r *http.Request) (T, error) {
 	var v T
 	if err := json.NewDecoder(r.Body).Decode(&v); err != nil {
-		return v, fmt.Errorf("error decoding json: %w", err)
+		return v, Error{
+			Message:    "error decoding json",
+			StatusCode: http.StatusBadRequest,
+		}
 	}
 
 	return v, nil
+}
+
+func DecodeValidated[T any](v *Validator, r *http.Request) (T, error) {
+	t, err := Decode[T](r)
+	if err != nil {
+		return t, err
+	}
+
+	problems, err := v.Struct(t)
+	if err != nil {
+		return t, err
+	}
+	if problems != nil {
+		return t, Error{
+			Message:    "Validation Error",
+			StatusCode: http.StatusBadRequest,
+			Data:       problems,
+		}
+	}
+
+	return t, nil
 }
