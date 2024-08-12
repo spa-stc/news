@@ -16,9 +16,17 @@ type DataGetter interface {
 }
 
 type Getter struct {
-	sheetID   string
-	sheetName string
-	lunchURL  string
+	sheetID  string
+	sheetGID string
+	lunchURL string
+}
+
+func NewGetter(sheetID string, sheetGID string, lunchURL string) *Getter {
+	return &Getter{
+		sheetID:  sheetID,
+		sheetGID: sheetGID,
+		lunchURL: lunchURL,
+	}
 }
 
 func (i *Getter) GetLunch(ctx context.Context) (map[string]string, error) {
@@ -75,9 +83,8 @@ func (i *Getter) GetInfo(ctx context.Context) (map[string]CsvData, error) {
 	defer cancel()
 
 	queryurl := fmt.Sprintf(
-		"https://docs.google.com/spreadsheets/d/%s/gviz/tq?tqx=out:csv&sheet=%s",
-		i.sheetID,
-		i.sheetName)
+		"https://docs.google.com/spreadsheets/d/1EH8eAXgtaCzxBQWmk1yjBIuKD_CtZlsUDimHUFyoZs8/export?format=csv&id=%s&gid=%s",
+		i.sheetID, i.sheetGID)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, queryurl, nil)
 	if err != nil {

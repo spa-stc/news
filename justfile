@@ -24,3 +24,6 @@ build:
 
 test: run_migrations seed_database
 	go test ./...
+
+run: run_migrations seed_database
+	go run ./main.go
