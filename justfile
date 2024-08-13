@@ -17,6 +17,7 @@ run_migrations:
 	migrate -path migrations -database $NEWSLETTER_DATABASE_URL up
 
 generate:
+	buf generate
 	sqlc generate
 
 build: 
@@ -27,3 +28,6 @@ test: run_migrations seed_database
 
 run: run_migrations seed_database
 	go run ./main.go
+
+buf-format:
+	buf format -w

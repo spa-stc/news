@@ -45,6 +45,10 @@
             go-migrate
             delve
 
+            # buffers
+            buf
+            protoc-gen-go
+
             sqlc
             postgresql
           ];
