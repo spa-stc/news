@@ -16,7 +16,7 @@ type Validator struct {
 }
 
 func NewValidator() *Validator {
-	v := validator.New()
+	v := validator.New(validator.WithRequiredStructEnabled())
 	en := en.New()
 	uni := ut.New(en, en)
 

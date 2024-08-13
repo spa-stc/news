@@ -11,11 +11,14 @@ import (
 )
 
 func NewServer(timegetter service.TimeGenerator, db db.Executor) http.Handler {
+	v := web.NewValidator()
+
 	r := chi.NewMux()
 	r.Use(middleware.Recover)
 
 	r.Method(http.MethodGet, "/healthz", handleHealthZ())
 	r.Method(http.MethodGet, "/week", handleGetWeek(db, timegetter))
+	r.Method(http.MethodPost, "/signup", handleSignup(db, v))
 
 	return r
 }

@@ -39,11 +39,19 @@ func mapWebError(err error) Error {
 		}
 	}
 
+	if errors.Is(err, db.ErrUniqueViolation) {
+		return Error{
+			Message:    "conflict",
+			StatusCode: http.StatusConflict,
+		}
+	}
+
 	var webErr Error
 	if errors.As(err, &webErr) {
 		return webErr
 	}
 
+	slog.Error("unhandled web error", "err", err)
 	return Error{
 		StatusCode: http.StatusInternalServerError,
 		Message:    "Internal Server Error",

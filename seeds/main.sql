@@ -69,6 +69,14 @@ INSERT INTO users (
 	'password_hash',
 	false,
 	'unverified'	
+),
+(
+	'4e14fe61-5b60-4599-9c6a-6bc2b510e613', 
+	'name',
+	'email@spa.edu',
+	'password_hash',
+	false,
+	'unverified'
 );
 
 INSERT INTO email_verifications (
