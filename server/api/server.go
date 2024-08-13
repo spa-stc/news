@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	chimd "github.com/go-chi/chi/v5/middleware"
 	"stpaulacademy.tech/newsletter/db"
 	"stpaulacademy.tech/newsletter/util/service"
 	"stpaulacademy.tech/newsletter/web"
@@ -15,6 +16,9 @@ func NewServer(timegetter service.TimeGenerator, db db.Executor) http.Handler {
 
 	r := chi.NewMux()
 	r.Use(middleware.Recover)
+	r.Use(chimd.CleanPath)
+	r.Use(chimd.RealIP)
+	r.Use(chimd.Compress(5)) //nolint:mnd // ok
 
 	r.Method(http.MethodGet, "/healthz", handleHealthZ())
 	r.Method(http.MethodGet, "/week", handleGetWeek(db, timegetter))
