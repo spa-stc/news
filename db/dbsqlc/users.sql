@@ -48,3 +48,6 @@ SET
 	updated_ts = NOW()
 WHERE 
 	id = @id;
+
+-- name: GetTokenClaimsByUserID :one
+SELECT id, is_admin, status FROM users WHERE id = @id LIMIT 1;

@@ -42,6 +42,12 @@ type UpdateUser struct {
 	Status   *UserStatus
 }
 
+type TokenClaims struct {
+	ID      uuid.UUID
+	IsAdmin bool
+	Status  UserStatus
+}
+
 func fromSqlcUser(usr dbsqlc.User) User {
 	return User{
 		ID:                   usr.ID,
@@ -150,4 +156,19 @@ func UpdateUserByID(ctx context.Context, e db.Executor, id uuid.UUID, uu UpdateU
 	}
 
 	return nil
+}
+
+func GetTokenClaims(ctx context.Context, e db.Executor, id uuid.UUID) (TokenClaims, error) {
+	claims, err := dbsqlc.New().GetTokenClaimsByUserID(ctx, e, id)
+	if err != nil {
+		return TokenClaims{}, db.HandleError(err)
+	}
+
+	c := TokenClaims{
+		ID:      claims.ID,
+		IsAdmin: claims.IsAdmin,
+		Status:  UserStatus(claims.Status),
+	}
+
+	return c, nil
 }

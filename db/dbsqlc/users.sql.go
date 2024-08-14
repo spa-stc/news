@@ -12,6 +12,23 @@ import (
 	"github.com/google/uuid"
 )
 
+const getTokenClaimsByUserID = `-- name: GetTokenClaimsByUserID :one
+SELECT id, is_admin, status FROM users WHERE id = $1 LIMIT 1
+`
+
+type GetTokenClaimsByUserIDRow struct {
+	ID      uuid.UUID
+	IsAdmin bool
+	Status  UserStatus
+}
+
+func (q *Queries) GetTokenClaimsByUserID(ctx context.Context, db DBTX, id uuid.UUID) (GetTokenClaimsByUserIDRow, error) {
+	row := db.QueryRow(ctx, getTokenClaimsByUserID, id)
+	var i GetTokenClaimsByUserIDRow
+	err := row.Scan(&i.ID, &i.IsAdmin, &i.Status)
+	return i, err
+}
+
 const getUserByEmail = `-- name: GetUserByEmail :one
 SELECT 
 	users.id, users.name, users.email, users.password_hash, users.is_admin, users.status, users.created_ts, users.updated_ts, 

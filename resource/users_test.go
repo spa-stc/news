@@ -108,4 +108,28 @@ func TestUsersResource(t *testing.T) {
 
 		require.Equal(t, resource.UserStatusVerified, usr.Status)
 	})
+
+	t.Run("test_get_claims_failure", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
+
+		_, err := resource.GetTokenClaims(ctx, tx, uuid.MustParse("4e14fe61-5b60-4599-9c6a-6bc2b510e612"))
+
+		require.ErrorIs(t, err, db.ErrNotFound)
+	})
+
+	t.Run("test_get_claims", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
+
+		claims, err := resource.GetTokenClaims(ctx, tx, uuid.MustParse("4e14fe61-5b60-4599-9c6a-6bc2b510e613"))
+
+		require.NoError(t, err)
+
+		expected := resource.TokenClaims{
+			ID:      uuid.MustParse("4e14fe61-5b60-4599-9c6a-6bc2b510e613"),
+			IsAdmin: false,
+			Status:  resource.UserStatusUnverified,
+		}
+
+		require.Equal(t, expected, claims)
+	})
 }
