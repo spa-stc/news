@@ -1,0 +1,10 @@
+set dotenv-load := true
+
+_default:
+	@just --list
+
+kanel:
+	npx kanel -d $DATABASE_URL
+
+dev:
+	npm run dev

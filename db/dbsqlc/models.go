@@ -5,55 +5,8 @@
 package dbsqlc
 
 import (
-	"database/sql/driver"
-	"fmt"
 	"time"
-
-	"github.com/google/uuid"
 )
-
-type UserStatus string
-
-const (
-	UserStatusVerified   UserStatus = "verified"
-	UserStatusUnverified UserStatus = "unverified"
-	UserStatusBanned     UserStatus = "banned"
-)
-
-func (e *UserStatus) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = UserStatus(s)
-	case string:
-		*e = UserStatus(s)
-	default:
-		return fmt.Errorf("unsupported scan type for UserStatus: %T", src)
-	}
-	return nil
-}
-
-type NullUserStatus struct {
-	UserStatus UserStatus
-	Valid      bool // Valid is true if UserStatus is not NULL
-}
-
-// Scan implements the Scanner interface.
-func (ns *NullUserStatus) Scan(value interface{}) error {
-	if value == nil {
-		ns.UserStatus, ns.Valid = "", false
-		return nil
-	}
-	ns.Valid = true
-	return ns.UserStatus.Scan(value)
-}
-
-// Value implements the driver Valuer interface.
-func (ns NullUserStatus) Value() (driver.Value, error) {
-	if !ns.Valid {
-		return nil, nil
-	}
-	return string(ns.UserStatus), nil
-}
 
 type Day struct {
 	Date        time.Time
@@ -70,23 +23,4 @@ type Day struct {
 	Grade12     string
 	CreatedTs   time.Time
 	UpdatedTs   time.Time
-}
-
-type EmailVerification struct {
-	ID        uuid.UUID
-	Secret    string
-	Used      bool
-	UserID    uuid.UUID
-	CreatedTs time.Time
-}
-
-type User struct {
-	ID           uuid.UUID
-	Name         string
-	Email        string
-	PasswordHash string
-	IsAdmin      bool
-	Status       UserStatus
-	CreatedTs    time.Time
-	UpdatedTs    time.Time
 }

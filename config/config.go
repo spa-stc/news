@@ -3,8 +3,6 @@ package config
 import "errors"
 
 type Config struct {
-	Host       string
-	Port       int
 	DatbaseURL string
 
 	SheetID  string
@@ -13,14 +11,6 @@ type Config struct {
 }
 
 func Validate(c Config) error {
-	if c.Host == "" {
-		return errors.New("missing host")
-	}
-
-	if c.Port == 0 {
-		return errors.New("missing port")
-	}
-
 	if c.DatbaseURL == "" {
 		return errors.New("missing database_url")
 	}

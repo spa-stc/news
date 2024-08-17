@@ -45,12 +45,11 @@
             go-migrate
             delve
 
-            # buffers
-            buf
-            protoc-gen-go
-
+            #DB
             sqlc
             postgresql
+
+            nodejs
           ];
         };
 

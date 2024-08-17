@@ -7,17 +7,16 @@ lint:
 	golangci-lint run
 
 create_migration NAME: 
-	migrate create -ext sql -dir db/migrations -seq {{NAME}}
+	migrate create -ext sql -dir migrations -seq {{NAME}}
 
 seed_database:
-	psql $NEWSLETTER_DATABASE_URL --echo-errors --quiet -c '\timing off' -f seeds/reset.sql
-	psql $NEWSLETTER_DATABASE_URL --echo-errors --quiet -c '\timing off' -f seeds/main.sql
+	psql $NEWSLETTER_DATABASE_URL --echo-errors --quiet -c '\timing off' -f db/seeds/reset.sql
+	psql $NEWSLETTER_DATABASE_URL --echo-errors --quiet -c '\timing off' -f db/seeds/main.sql
 
 run_migrations:
 	migrate -path migrations -database $NEWSLETTER_DATABASE_URL up
 
 generate:
-	buf generate
 	sqlc generate
 
 build: 
@@ -28,6 +27,3 @@ test: run_migrations seed_database
 
 run: run_migrations seed_database
 	go run ./main.go
-
-buf-format:
-	buf format -w
