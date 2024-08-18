@@ -11,7 +11,7 @@ import Navbar from "./components/navbar";
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: "SPA SSN" },
+		{ title: "SPA SN" },
 	];
 };
 
@@ -26,7 +26,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			</head>
 			<body className="bg-gray-200">
 				<Navbar />
-				<div className="max-w-4xl mx-auto">
+				<div className="max-w-2xl md:mx-auto mx-4 ">
 					{children}
 				</div>
 				<ScrollRestoration />
