@@ -1,9 +1,9 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
-import { DayItem, DayItemOptional } from "~/components/dayItem";
+import Card from "~/components/card";
+import { DayItem, DayItemOptional } from "~/components/dayitem";
 import db from "~/db";
-import { GetWeek } from "~/utils/time";
 
 export default function Index() {
 	const data = useLoaderData<typeof loader>();
@@ -11,8 +11,8 @@ export default function Index() {
 	return (
 		<div>
 			{data.days.map(day => (
-				<div key={day.date}>
-					<h1>{dayjs(day.date).format("dddd, MMM D")}</h1>
+				<Card key={day.date} extraClasses="mx-4 my-2">
+					<h1 className="text-lg font-bold mb-1">{dayjs(day.date).format("dddd, MMM D")}:</h1>
 					<DayItem title="Lunch" content={day.lunch} />
 					<DayItemOptional title="Notes" content={day.notes} />
 					<DayItemOptional title="Rotation Day" content={day.rotation_day} />
@@ -24,16 +24,14 @@ export default function Index() {
 					<DayItemOptional title="Grade 12" content={day.grade_12} />
 					<DayItemOptional title="AP Info" content={day.ap_info} />
 					<DayItemOptional title="CC Info" content={day.cc_info} />
-				</div>
+				</Card>
 			))}
 		</div>
 	);
 }
 
 export async function loader({ }: LoaderFunctionArgs) {
-	const dates = GetWeek(dayjs());
-
-	const days = await db.selectFrom('days').selectAll().where("date", "in", dates).execute();
+	const days = await db.selectFrom('days').selectAll().execute();
 
 	return json(
 		{
