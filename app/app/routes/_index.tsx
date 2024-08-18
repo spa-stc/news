@@ -3,6 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
 import { DayItem, DayItemOptional } from "~/components/dayItem";
 import db from "~/db";
+import { GetWeek } from "~/utils/time";
 
 export default function Index() {
 	const data = useLoaderData<typeof loader>();
@@ -30,7 +31,9 @@ export default function Index() {
 }
 
 export async function loader({ }: LoaderFunctionArgs) {
-	const days = await db.selectFrom('days').selectAll().execute();
+	const dates = GetWeek(dayjs());
+
+	const days = await db.selectFrom('days').selectAll().where("date", "in", dates).execute();
 
 	return json(
 		{

@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import { MetaFunction } from "@remix-run/node";
+import Navbar from "./components/navbar";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -23,8 +24,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Meta />
 				<Links />
 			</head>
-			<body>
-				{children}
+			<body className="bg-gray-200">
+				<Navbar />
+				<div>
+					{children}
+				</div>
 				<ScrollRestoration />
 				<Scripts />
 			</body>
