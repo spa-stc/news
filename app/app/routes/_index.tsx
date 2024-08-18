@@ -24,9 +24,10 @@ export default function Index() {
 					<DayItemOptional title="Grade 12" content={day.grade_12} />
 					<DayItemOptional title="AP Info" content={day.ap_info} />
 					<DayItemOptional title="CC Info" content={day.cc_info} />
-				</Card>
-			))}
-		</div>
+				</Card >
+			))
+			}
+		</div >
 	);
 }
 
