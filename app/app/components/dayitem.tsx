@@ -10,9 +10,10 @@ export function DayItem(props: { title: string, content: string }) {
 }
 
 export function DayItemOptional(props: { title: string, content: string }) {
-	if (props.content === "") {
+	if (props.content !== "") {
 		return (
 			<DayItem {...props} />
 		);
-	} else { }
+	} else {
+	}
 }
