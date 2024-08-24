@@ -11,7 +11,7 @@ export default function Navbar() {
 				<div className="mx-auto"></div>
 				<h1 className="font-bold text-xl">SPA SN</h1>
 				<div className="mx-auto"></div>
-				<Link to="/" className="border-2 border-gray-300 rounded-md px-2 font-bold">Login</Link>
+				<Link to="/login" className="border-2 border-gray-300 rounded-md px-2 font-bold">Login</Link>
 			</div>
 		</div >
 	);

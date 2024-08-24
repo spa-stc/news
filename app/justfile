@@ -3,6 +3,9 @@ set dotenv-load := true
 _default:
 	@just --list
 
+node_modules:
+	npm ci
+
 kanel:
 	npx kanel -d $DATABASE_URL
 

@@ -16,6 +16,9 @@ seed_database:
 run_migrations:
 	migrate -path migrations -database $NEWSLETTER_DATABASE_URL up
 
+down_migrations:
+	migrate -path migrations -database $NEWSLETTER_DATABASE_URL down
+
 generate:
 	sqlc generate
 

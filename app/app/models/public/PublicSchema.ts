@@ -3,9 +3,12 @@
 
 import type { default as SchemaMigrationsTable } from './SchemaMigrations';
 import type { default as DaysTable } from './Days';
+import type { default as UsersTable } from './Users';
 
 export default interface PublicSchema {
   schema_migrations: SchemaMigrationsTable;
 
   days: DaysTable;
+
+  users: UsersTable;
 }
