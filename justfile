@@ -27,3 +27,6 @@ test: run_migrations seed_database
 
 run: run_migrations seed_database
 	go run ./main.go
+
+psql_dev: 
+	psql $NEWSLETTER_DATABASE_URL
