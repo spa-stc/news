@@ -2,7 +2,6 @@ package db
 
 import (
 	"errors"
-	"log/slog"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -27,6 +26,5 @@ func HandleError(err error) error {
 		}
 	}
 
-	slog.Error("uncaught database error", "error", err)
 	return err
 }

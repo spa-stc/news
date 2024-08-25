@@ -2,10 +2,10 @@ package daysfetch_test
 
 import (
 	"context"
-	"log/slog"
 	"testing"
 	"time"
 
+	"github.com/neilotoole/slogt"
 	"github.com/stretchr/testify/require"
 	"stpaulacademy.tech/newsletter/cron/jobs/daysfetch"
 	"stpaulacademy.tech/newsletter/resource"
@@ -71,6 +71,7 @@ func buildFixtures(dates []time.Time) (map[string]string, map[string]daysfetch.C
 
 func TestDaysUpdateJob(t *testing.T) {
 	t.Parallel()
+	logger := slogt.New(t)
 
 	dates := []time.Time{
 		time.Date(2023, 12, 3, 0, 0, 0, 0, time.UTC),
@@ -82,7 +83,7 @@ func TestDaysUpdateJob(t *testing.T) {
 		time.Date(2023, 12, 9, 0, 0, 0, 0, time.UTC),
 	}
 
-	ctx := testutil.Setup(t)
+	ctx := context.Background()
 
 	executor := testutil.TestTx(ctx, t)
 
@@ -110,8 +111,8 @@ func TestDaysUpdateJob(t *testing.T) {
 		return r
 	})
 
-	slog.InfoContext(ctx, "fetched", "data", week)
-	slog.InfoContext(ctx, "expected", "data", expected)
+	logger.InfoContext(ctx, "fetched", "data", week)
+	logger.InfoContext(ctx, "expected", "data", expected)
 
 	require.ElementsMatch(t, expected, week)
 }

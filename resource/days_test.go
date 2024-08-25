@@ -1,6 +1,7 @@
 package resource_test
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -18,7 +19,7 @@ func parseDate(t *testing.T, s string) time.Time {
 
 func TestDaysResource(t *testing.T) {
 	t.Parallel()
-	ctx := testutil.Setup(t)
+	ctx := context.Background()
 
 	t.Run("test_query_not_found", func(t *testing.T) {
 		tx := testutil.TestTx(ctx, t)

@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -19,6 +20,8 @@ import (
 var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 	Use: "newsletter",
 	RunE: func(_ *cobra.Command, _ []string) error {
+		logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -41,15 +44,17 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 
 		timegen := &service.TimeGen{}
 
-		cronservice := cron.NewService()
+		cronservice := cron.NewService(logger)
 		daygetter := daysfetch.NewGetter(c.SheetID, c.SheetGID, c.IcalURL)
-		err = cronservice.AddJob(daysfetch.New(db, timegen, daygetter, cron.NewSlogStatusNotifer(nil, "days_fetch")))
+		err = cronservice.AddJob(daysfetch.New(db, timegen, daygetter, cron.NewSlogStatusNotifer(logger, "days_fetch")))
 		if err != nil {
 			return fmt.Errorf("error adding cron job to runner: %w", err)
 		}
 
 		cronservice.Start()
 		defer cronservice.Stop()
+
+		logger.InfoContext(ctx, "startup complete")
 
 		sc := make(chan os.Signal, 1)
 		signal.Notify(sc, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)

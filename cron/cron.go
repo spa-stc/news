@@ -16,12 +16,14 @@ type Job interface {
 }
 
 type Service struct {
-	cron *cron.Cron
+	cron   *cron.Cron
+	logger *slog.Logger
 }
 
-func NewService() *Service {
+func NewService(logger *slog.Logger) *Service {
 	return &Service{
-		cron: cron.New(cron.WithLocation(time.Local)),
+		cron:   cron.New(cron.WithLocation(time.Local)),
+		logger: logger,
 	}
 }
 
@@ -43,14 +45,14 @@ func (s *Service) AddJob(j Job) error {
 		if err := j.Run(ctx); err != nil {
 			err = j.Notifer().Failure(ctx, err)
 			if err != nil {
-				slog.Error("error sending cron notifer failure", "error", err)
+				s.logger.Error("error sending cron notifer failure", "error", err)
 			}
 			return
 		}
 
 		err := j.Notifer().Success(ctx, time.Since(start))
 		if err != nil {
-			slog.Error("error sending cron notifer sucess", "error", err)
+			s.logger.Error("error sending cron notifer sucess", "error", err)
 		}
 	}
 

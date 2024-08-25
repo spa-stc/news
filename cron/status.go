@@ -20,10 +20,6 @@ type SlogStatusNotifer struct {
 }
 
 func NewSlogStatusNotifer(logger *slog.Logger, jobName string) *SlogStatusNotifer {
-	if logger == nil {
-		logger = slog.Default()
-	}
-
 	return &SlogStatusNotifer{
 		logger:  logger,
 		jobName: jobName,
