@@ -22,6 +22,9 @@ down_migrations:
 generate:
 	sqlc generate
 
+generate-clean:
+	rm -rf ./db/dbsqlc/*.go
+
 build: 
 	go build ./...
 

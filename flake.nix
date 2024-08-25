@@ -48,8 +48,6 @@
             #DB
             sqlc
             postgresql
-
-            nodejs
           ];
         };
 

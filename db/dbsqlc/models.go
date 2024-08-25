@@ -24,15 +24,3 @@ type Day struct {
 	CreatedTs   time.Time
 	UpdatedTs   time.Time
 }
-
-type User struct {
-	ID            int64
-	Name          string
-	PasswordHash  string
-	Admin         bool
-	Email         string
-	EmailVerified bool
-	Enabled       bool
-	CreatedTs     time.Time
-	UpdatedTs     time.Time
-}
