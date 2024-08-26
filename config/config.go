@@ -8,6 +8,8 @@ type Config struct {
 	SheetID  string
 	SheetGID string
 	IcalURL  string
+
+	Port int
 }
 
 func Validate(c Config) error {
