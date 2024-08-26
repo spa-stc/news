@@ -2,12 +2,15 @@ package assets
 
 import (
 	"crypto/md5" //nolint:gosec // Not used in cryptography.
+	"errors"
 	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
 )
+
+var ErrAssetNotFound = errors.New("asset not found")
 
 type Asset struct {
 	MimeType string
@@ -84,6 +87,15 @@ func (a *Assets) AddDir(basepath string) error {
 	}
 
 	return nil
+}
+
+func (a *Assets) GetLink(name string) (string, error) {
+	hash, ok := a.byName[name]
+	if !ok {
+		return "", ErrAssetNotFound
+	}
+
+	return fmt.Sprintf("/assets/%s", hash), nil
 }
 
 func getFiletype(extension string, _ []byte) string {
