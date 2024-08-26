@@ -22,8 +22,8 @@ type Assets struct {
 	byHash map[[16]byte]Asset
 }
 
-func NewAssets() Assets {
-	return Assets{
+func NewAssets() *Assets {
+	return &Assets{
 		byName: make(map[string][16]byte),
 		byHash: make(map[[16]byte]Asset),
 	}

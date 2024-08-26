@@ -17,21 +17,21 @@ var ErrPartialNotFound = errors.New("partial not found")
 
 type Partials struct {
 	partials map[string]string
-	assets   assets.Assets
+	assets   *assets.Assets
 }
 
-func NewPartials(basedir string, assets assets.Assets) (*Partials, error) {
+func NewPartials(basedir string, assets *assets.Assets) (*Partials, error) {
 	partials := make(map[string]string)
 
 	basedir = filepath.Clean(basedir)
-	err := filepath.Walk(basedir, func(path string, info fs.FileInfo, err error) error {
+	err := filepath.WalkDir(basedir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return fmt.Errorf("filepath walk error: %w", err)
 		}
 
 		filename := strings.TrimPrefix(path, basedir+"/")
 
-		if info.IsDir() {
+		if d.IsDir() {
 			return nil
 		}
 
