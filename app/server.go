@@ -1,15 +1,18 @@
 package app
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	chimd "github.com/go-chi/chi/v5/middleware"
 	"stpaulacademy.tech/newsletter/web"
 )
 
-func NewServer(logger *slog.Logger) http.Handler {
+func NewServer() http.Handler {
 	r := chi.NewMux()
+
+	r.Use(chimd.RealIP)
+	r.Use(chimd.Compress(5))
 
 	r.Method(http.MethodGet, "/healthz", web.Handler(handleHealthz))
 
@@ -17,6 +20,7 @@ func NewServer(logger *slog.Logger) http.Handler {
 }
 
 func handleHealthz(w http.ResponseWriter, _ *http.Request) error {
+	w.Header().Set("Content-Type", "text/plain")
 	_, err := w.Write([]byte("Service Ready."))
 	return err
 }
