@@ -62,14 +62,17 @@ func (p *Partials) Render(name string, data interface{}) (string, error) {
 		return "", ErrPartialNotFound
 	}
 
-	t, err := template.New(name).Parse(partial)
+	t := template.New(name)
+
+	t.Funcs(map[string]any{
+		"asset":   p.assets.GetLink,
+		"partial": p.Render,
+	})
+
+	t, err := t.Parse(partial)
 	if err != nil {
 		return "", fmt.Errorf("error parsing partial %s: %w", name, err)
 	}
-
-	t.Funcs(map[string]any{
-		"asset": p.assets.GetLink,
-	})
 
 	buf := bytes.NewBuffer(nil)
 	if err := t.Execute(buf, data); err != nil {
