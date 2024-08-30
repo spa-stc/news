@@ -19,6 +19,7 @@ import (
 	"stpaulacademy.tech/newsletter/cron"
 	"stpaulacademy.tech/newsletter/cron/jobs/daysfetch"
 	"stpaulacademy.tech/newsletter/util/service"
+	"stpaulacademy.tech/newsletter/web"
 )
 
 var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
@@ -34,12 +35,18 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 			IcalURL:    viper.GetString("ical_url"),
 			SheetID:    viper.GetString("sheet_id"),
 			SheetGID:   viper.GetString("sheet_gid"),
+			PublicDir:  viper.GetString("public_dir"),
 			Port:       viper.GetInt("port"),
 		}
 
 		err := config.Validate(c)
 		if err != nil {
 			return fmt.Errorf("error getting configuration: %w", err)
+		}
+
+		public, err := web.NewPublic(c.PublicDir)
+		if err != nil {
+			return err
 		}
 
 		db, err := pgxpool.New(ctx, c.DatbaseURL)
@@ -51,7 +58,10 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 
 		cronservice := cron.NewService(logger)
 		daygetter := daysfetch.NewGetter(c.SheetID, c.SheetGID, c.IcalURL)
-		err = cronservice.AddJob(daysfetch.New(db, timegen, daygetter, cron.NewSlogStatusNotifer(logger, "days_fetch")))
+		err = cronservice.AddJob(daysfetch.New(db,
+			timegen,
+			daygetter,
+			cron.NewSlogStatusNotifer(logger, "days_fetch")))
 		if err != nil {
 			return fmt.Errorf("error adding cron job to runner: %w", err)
 		}
@@ -59,7 +69,7 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 		cronservice.Start()
 		defer cronservice.Stop()
 
-		app := app.NewServer()
+		app := app.NewServer(logger, public.Assets(), public.Templates())
 		server := runServer(logger, app, fmt.Sprintf("0.0.0.0:%d", c.Port))
 		defer func() {
 			if err := server.Shutdown(ctx); err != nil {
@@ -83,6 +93,7 @@ func init() { //nolint:gochecknoinits // Not state related
 	RootCMD.PersistentFlags().String("sheet-gid", "", "Name of Google Sheet with XPeriod Info")
 	RootCMD.PersistentFlags().String("ical-url", "", "Location of lunch calendar")
 	RootCMD.PersistentFlags().Int("port", 3000, "What port to serve http over")
+	RootCMD.PersistentFlags().String("public-dir", "", "Location of templates and static files.")
 
 	err := viper.BindPFlag("database_url", RootCMD.PersistentFlags().Lookup("database-url"))
 	if err != nil {
@@ -105,6 +116,11 @@ func init() { //nolint:gochecknoinits // Not state related
 	}
 
 	err = viper.BindPFlag("port", RootCMD.PersistentFlags().Lookup("port"))
+	if err != nil {
+		panic(err)
+	}
+
+	err = viper.BindPFlag("public_dir", RootCMD.PersistentFlags().Lookup("public-dir"))
 	if err != nil {
 		panic(err)
 	}

@@ -9,6 +9,8 @@ type Config struct {
 	SheetGID string
 	IcalURL  string
 
+	PublicDir string
+
 	Port int
 }
 
@@ -27,6 +29,9 @@ func Validate(c Config) error {
 
 	if c.IcalURL == "" {
 		return errors.New("missing ical_url")
+	}
+	if c.PublicDir == "" {
+		return errors.New("missing public_dir")
 	}
 
 	return nil
