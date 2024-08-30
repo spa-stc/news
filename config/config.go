@@ -12,6 +12,8 @@ type Config struct {
 	PublicDir string
 
 	Port int
+
+	Development bool
 }
 
 func Validate(c Config) error {

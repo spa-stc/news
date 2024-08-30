@@ -31,12 +31,13 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 		defer cancel()
 
 		c := config.Config{
-			DatbaseURL: viper.GetString("database_url"),
-			IcalURL:    viper.GetString("ical_url"),
-			SheetID:    viper.GetString("sheet_id"),
-			SheetGID:   viper.GetString("sheet_gid"),
-			PublicDir:  viper.GetString("public_dir"),
-			Port:       viper.GetInt("port"),
+			DatbaseURL:  viper.GetString("database_url"),
+			IcalURL:     viper.GetString("ical_url"),
+			SheetID:     viper.GetString("sheet_id"),
+			SheetGID:    viper.GetString("sheet_gid"),
+			PublicDir:   viper.GetString("public_dir"),
+			Port:        viper.GetInt("port"),
+			Development: viper.GetBool("development"),
 		}
 
 		err := config.Validate(c)
@@ -77,7 +78,7 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 			}
 		}()
 
-		logger.InfoContext(ctx, "startup complete", "http_port", c.Port)
+		logger.InfoContext(ctx, "startup complete", "http_port", c.Port, "development", c.Development)
 
 		sc := make(chan os.Signal, 1)
 		signal.Notify(sc, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
@@ -94,6 +95,7 @@ func init() { //nolint:gochecknoinits // Not state related
 	RootCMD.PersistentFlags().String("ical-url", "", "Location of lunch calendar")
 	RootCMD.PersistentFlags().Int("port", 3000, "What port to serve http over")
 	RootCMD.PersistentFlags().String("public-dir", "", "Location of templates and static files.")
+	RootCMD.PersistentFlags().Bool("development", false, "Enable development mode.")
 
 	err := viper.BindPFlag("database_url", RootCMD.PersistentFlags().Lookup("database-url"))
 	if err != nil {
@@ -121,6 +123,11 @@ func init() { //nolint:gochecknoinits // Not state related
 	}
 
 	err = viper.BindPFlag("public_dir", RootCMD.PersistentFlags().Lookup("public-dir"))
+	if err != nil {
+		panic(err)
+	}
+
+	err = viper.BindPFlag("development", RootCMD.PersistentFlags().Lookup("development"))
 	if err != nil {
 		panic(err)
 	}
