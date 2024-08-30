@@ -56,7 +56,7 @@ func NewPartials(basedir string, assets *assets.Assets) (*Partials, error) {
 	return p, nil
 }
 
-func (p *Partials) Render(name string, data interface{}) (string, error) {
+func (p *Partials) Render(name string, data interface{}) (template.HTML, error) {
 	partial, ok := p.partials[name]
 	if !ok {
 		return "", ErrPartialNotFound
@@ -79,5 +79,5 @@ func (p *Partials) Render(name string, data interface{}) (string, error) {
 		return "", fmt.Errorf("error executing partial %s: %w", name, err)
 	}
 
-	return buf.String(), nil
+	return template.HTML(buf.String()), nil //nolint:gosec // Partial rendering function, does not need to be escaped.
 }
