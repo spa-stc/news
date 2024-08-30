@@ -25,8 +25,6 @@ import (
 var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 	Use: "newsletter",
 	RunE: func(_ *cobra.Command, _ []string) error {
-		logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -44,6 +42,15 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 		if err != nil {
 			return fmt.Errorf("error getting configuration: %w", err)
 		}
+
+		logLevel := slog.LevelInfo.Level()
+		if c.Development {
+			logLevel = slog.LevelDebug.Level()
+		}
+
+		logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			Level: logLevel,
+		}))
 
 		public, err := web.NewPublic(c.PublicDir)
 		if err != nil {
