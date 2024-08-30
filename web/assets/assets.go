@@ -2,6 +2,7 @@ package assets
 
 import (
 	"crypto/md5" //nolint:gosec // Not used in cryptography.
+	"encoding/base32"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -18,24 +19,24 @@ type Asset struct {
 }
 
 type Assets struct {
-	byName map[string][16]byte
-	byHash map[[16]byte]Asset
+	byName map[string]string
+	byHash map[string]Asset
 }
 
 func NewAssets() *Assets {
 	return &Assets{
-		byName: make(map[string][16]byte),
-		byHash: make(map[[16]byte]Asset),
+		byName: make(map[string]string),
+		byHash: make(map[string]Asset),
 	}
 }
 
-func (a *Assets) ByName(name string) ([16]byte, bool) {
+func (a *Assets) ByName(name string) (string, bool) {
 	hash, ok := a.byName[name]
 
 	return hash, ok
 }
 
-func (a *Assets) ByHash(hash [16]byte) (Asset, bool) {
+func (a *Assets) ByHash(hash string) (Asset, bool) {
 	asset, ok := a.byHash[hash]
 
 	return asset, ok
@@ -44,13 +45,15 @@ func (a *Assets) ByHash(hash [16]byte) (Asset, bool) {
 func (a *Assets) AddBytes(name, mimeType string, content []byte) {
 	hash := md5.Sum(content) //nolint:gosec // Not used in cryptography.
 
+	h := base32.HexEncoding.EncodeToString(hash[:])
+
 	asset := Asset{
 		MimeType: mimeType,
 		Content:  content,
 	}
 
-	a.byName[name] = hash
-	a.byHash[hash] = asset
+	a.byName[name] = h
+	a.byHash[h] = asset
 }
 
 func (a *Assets) AddDir(basepath string) error {

@@ -14,10 +14,8 @@ const (
 func ServeStatics(a *assets.Assets) Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		hash := r.PathValue("hash")
-		var byteHash [16]byte
-		copy(byteHash[:], hash)
 
-		asset, ok := a.ByHash(byteHash)
+		asset, ok := a.ByHash(hash)
 		if !ok {
 			return Error{
 				Code:    http.StatusNotFound,
