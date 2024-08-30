@@ -53,6 +53,9 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 		}))
 
 		public, err := web.NewPublic(c.PublicDir)
+		if c.Development {
+			public, err = web.NewWatchedPublic(logger, c.PublicDir)
+		}
 		if err != nil {
 			return err
 		}

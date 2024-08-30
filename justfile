@@ -33,7 +33,7 @@ build:
 test: run_migrations seed_database
 	go test ./...
 
-run: run_migrations seed_database tailwind
+run: run_migrations seed_database
 	go run ./main.go
 
 psql_dev: 
@@ -41,3 +41,6 @@ psql_dev:
 
 tailwind:
 	tailwindcss -i public/tailwind_in.css -o public/assets/main.css
+
+tailwind_watch:
+	tailwindcss -w -i public/tailwind_in.css -o public/assets/main.css
