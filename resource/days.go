@@ -60,6 +60,21 @@ func GetManyDays(ctx context.Context, e db.Executor, dates []time.Time) ([]Day, 
 	return sliceutil.Map(days, fromSqlcDay), nil
 }
 
+func GetManyDaysByRange(ctx context.Context, e db.Executor, start, end time.Time) ([]Day, error) {
+	days, err := dbsqlc.New().GetManyDaysbyDateRange(ctx, e, dbsqlc.GetManyDaysbyDateRangeParams{
+		Date:   start,
+		Date_2: end,
+	})
+	if err != nil {
+		return nil, db.HandleError(err)
+	}
+	if len(days) == 0 {
+		return nil, db.ErrNotFound
+	}
+
+	return sliceutil.Map(days, fromSqlcDay), nil
+}
+
 func BatchUpsertDays(ctx context.Context, e db.Executor, days []Day) error {
 	sqlc := dbsqlc.New()
 

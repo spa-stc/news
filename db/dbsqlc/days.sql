@@ -19,6 +19,9 @@ FROM
 WHERE
 	date = ANY(@dates::date[]);
 
+-- name: GetManyDaysbyDateRange :many 
+SELECT * FROM days WHERE date >= $1 AND date <= $2;
+
 -- name: UpsertDay :one
 INSERT INTO days (
 	date, 

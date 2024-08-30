@@ -67,6 +67,50 @@ func (q *Queries) GetManyDaysByDate(ctx context.Context, db DBTX, dates []time.T
 	return items, nil
 }
 
+const getManyDaysbyDateRange = `-- name: GetManyDaysbyDateRange :many
+SELECT date, lunch, x_period, rotation_day, location, notes, ap_info, cc_info, grade_9, grade_10, grade_11, grade_12, created_ts, updated_ts FROM days WHERE date >= $1 AND date <= $2
+`
+
+type GetManyDaysbyDateRangeParams struct {
+	Date   time.Time
+	Date_2 time.Time
+}
+
+func (q *Queries) GetManyDaysbyDateRange(ctx context.Context, db DBTX, arg GetManyDaysbyDateRangeParams) ([]Day, error) {
+	rows, err := db.Query(ctx, getManyDaysbyDateRange, arg.Date, arg.Date_2)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Day
+	for rows.Next() {
+		var i Day
+		if err := rows.Scan(
+			&i.Date,
+			&i.Lunch,
+			&i.XPeriod,
+			&i.RotationDay,
+			&i.Location,
+			&i.Notes,
+			&i.ApInfo,
+			&i.CcInfo,
+			&i.Grade9,
+			&i.Grade10,
+			&i.Grade11,
+			&i.Grade12,
+			&i.CreatedTs,
+			&i.UpdatedTs,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const upsertDay = `-- name: UpsertDay :one
 INSERT INTO days (
 	date, 

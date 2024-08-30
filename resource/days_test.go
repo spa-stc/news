@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+	"stpaulacademy.tech/newsletter/db"
 	"stpaulacademy.tech/newsletter/resource"
 	"stpaulacademy.tech/newsletter/util/sliceutil"
 	"stpaulacademy.tech/newsletter/util/testutil"
@@ -36,6 +37,57 @@ func TestDaysResource(t *testing.T) {
 			testutil.ParseDate(t, "2024-12-18"),
 		})
 		require.NoError(t, err)
+	})
+
+	t.Run("test_query_range", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
+		dates := []time.Time{
+			testutil.ParseDate(t, "2024-12-18"),
+			testutil.ParseDate(t, "2024-12-19"),
+			testutil.ParseDate(t, "2024-12-20"),
+		}
+
+		expected := sliceutil.Map(dates, func(s time.Time) resource.Day {
+			return resource.Day{
+				Date:        s,
+				Lunch:       "lunch",
+				XPeriod:     "x_period",
+				RotationDay: "rotation_day",
+				Location:    "location",
+				Notes:       "notes",
+				ApInfo:      "ap_info",
+				CcInfo:      "cc_info",
+				Grade9:      "grade_9",
+				Grade10:     "grade_10",
+				Grade11:     "grade_11",
+				Grade12:     "grade_12",
+				CreatedTS:   time.UnixMicro(0),
+				UpdatedTS:   time.UnixMicro(0),
+			}
+		})
+
+		days, err := resource.GetManyDaysByRange(ctx, tx, dates[0], dates[2])
+		require.NoError(t, err)
+		days = sliceutil.Map(days, func(d resource.Day) resource.Day {
+			d.CreatedTS = time.UnixMicro(0)
+			d.UpdatedTS = time.UnixMicro(0)
+
+			return d
+		})
+
+		require.Equal(t, expected, days)
+	})
+
+	t.Run("test_query_range_failure", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
+
+		_, err := resource.GetManyDaysByRange(
+			ctx,
+			tx,
+			testutil.ParseDate(t, "2023-02-02"),
+			testutil.ParseDate(t, "2023-02-03"),
+		)
+		require.ErrorIs(t, err, db.ErrNotFound)
 	})
 
 	t.Run("test_query", func(t *testing.T) {
