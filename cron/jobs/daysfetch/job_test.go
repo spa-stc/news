@@ -96,7 +96,7 @@ func TestDaysUpdateJob(t *testing.T) {
 		lunches: lunches,
 	}
 
-	job := daysfetch.New(executor, timegen, getter, nil)
+	job := daysfetch.New(executor, timegen, getter, nil, false)
 
 	err := job.Run(ctx)
 	require.NoError(t, err)

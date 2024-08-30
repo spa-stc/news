@@ -69,10 +69,13 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 
 		cronservice := cron.NewService(logger)
 		daygetter := daysfetch.NewGetter(c.SheetID, c.SheetGID, c.IcalURL)
-		err = cronservice.AddJob(daysfetch.New(db,
+		err = cronservice.AddJob(daysfetch.New(
+			db,
 			timegen,
 			daygetter,
-			cron.NewSlogStatusNotifer(logger, "days_fetch")))
+			cron.NewSlogStatusNotifer(logger, "days_fetch"),
+			c.Development,
+		))
 		if err != nil {
 			return fmt.Errorf("error adding cron job to runner: %w", err)
 		}

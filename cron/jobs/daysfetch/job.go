@@ -14,22 +14,31 @@ import (
 )
 
 type Job struct {
-	db      db.Executor
-	timeGen service.TimeGenerator
-	getter  DataGetter
-	notifer cron.StatusNotifer
+	db       db.Executor
+	timeGen  service.TimeGenerator
+	getter   DataGetter
+	notifer  cron.StatusNotifer
+	schedule string
 }
 
-func New(db db.Executor,
+func New(
+	db db.Executor,
 	timeGen service.TimeGenerator,
 	getter DataGetter,
 	notifer cron.StatusNotifer,
+	development bool,
 ) *Job {
+	schedule := "5 0 * * *"
+	if development {
+		schedule = "* * * * *"
+	}
+
 	return &Job{
-		db:      db,
-		timeGen: timeGen,
-		getter:  getter,
-		notifer: notifer,
+		db:       db,
+		timeGen:  timeGen,
+		getter:   getter,
+		notifer:  notifer,
+		schedule: schedule,
 	}
 }
 
@@ -86,5 +95,5 @@ func (j *Job) Notifer() cron.StatusNotifer {
 }
 
 func (j *Job) Spec() string {
-	return "* * * * *"
+	return j.schedule
 }
