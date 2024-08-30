@@ -78,8 +78,9 @@ func (t *TemplateRenderer) Render(name string, data RenderData, w io.Writer) err
 
 	templ := template.New("index")
 	templ.Funcs(map[string]any{
-		"asset":   t.Assets.GetLink,
-		"partial": t.Partials.Render,
+		"asset":     t.Assets.GetLink,
+		"partial":   t.Partials.Render,
+		"key_value": keyValue,
 	})
 
 	templ, err := templ.New("root.html").Parse(t.BaseTemplate)

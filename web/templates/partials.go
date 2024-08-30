@@ -65,8 +65,9 @@ func (p *Partials) Render(name string, data interface{}) (template.HTML, error) 
 	t := template.New(name)
 
 	t.Funcs(map[string]any{
-		"asset":   p.assets.GetLink,
-		"partial": p.Render,
+		"asset":     p.assets.GetLink,
+		"partial":   p.Render,
+		"key_value": keyValue,
 	})
 
 	t, err := t.Parse(partial)

@@ -9,6 +9,7 @@ import (
 	"github.com/neilotoole/slogt"
 	"github.com/stretchr/testify/require"
 	"stpaulacademy.tech/newsletter/app"
+	"stpaulacademy.tech/newsletter/util/testutil"
 	"stpaulacademy.tech/newsletter/web"
 )
 
@@ -17,8 +18,9 @@ func TestIndex(t *testing.T) {
 	ctx := context.Background()
 	p, err := web.NewPublic("../public")
 	require.NoError(t, err)
+	tx := testutil.TestTx(ctx, t)
 
-	s := app.NewServer(slogt.New(t), p.Assets(), p.RootAssets(), p.Templates())
+	s := app.NewServer(slogt.New(t), p.Assets(), p.RootAssets(), p.Templates(), tx)
 
 	rec := httptest.NewRecorder()
 

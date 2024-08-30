@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	chimd "github.com/go-chi/chi/v5/middleware"
+	"stpaulacademy.tech/newsletter/db"
 	"stpaulacademy.tech/newsletter/web"
 	"stpaulacademy.tech/newsletter/web/assets"
 	"stpaulacademy.tech/newsletter/web/templates"
@@ -16,6 +17,7 @@ func NewServer(
 	a *assets.Assets,
 	rootAssets *assets.Assets,
 	t *templates.TemplateRenderer,
+	_ db.Executor,
 ) http.Handler {
 	w := web.NewHandlerWrapper(logger)
 	r := chi.NewMux()

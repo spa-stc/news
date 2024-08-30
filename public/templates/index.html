@@ -1,3 +1,8 @@
 {{ template "root.html" . }}
 {{ define "content" }}
+<h1 class="text-xl font-bold">Day By Day:</h1>
+<div class="flex flex-col my-2 space-y-2">
+	{{ partial "day.html" . }}
+	{{ partial "day.html" . }}
+</div>
 {{ end }}

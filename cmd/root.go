@@ -83,7 +83,7 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 		cronservice.Start()
 		defer cronservice.Stop()
 
-		app := app.NewServer(logger, public.Assets(), public.RootAssets(), public.Templates())
+		app := app.NewServer(logger, public.Assets(), public.RootAssets(), public.Templates(), db)
 		server := runServer(logger, app, fmt.Sprintf("0.0.0.0:%d", c.Port))
 		defer func() {
 			if err := server.Shutdown(ctx); err != nil {

@@ -11,8 +11,9 @@
 	<link rel="stylesheet" href='{{ asset "main.css" }}' type="text/css">
 </head>
 
-<body>
-	<main>
+<body class="w-full bg-gray-50">
+	{{ partial "header.html" . }}
+	<main class="mx-4 max-w-xl xl:mx-auto">
 		{{ block "content" . }}{{ end }}
 	</main>
 </body>
