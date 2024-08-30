@@ -3,6 +3,8 @@ set dotenv-load := true
 _default:
 	@just --list
 
+check: lint test
+
 lint:
 	golangci-lint run
 
