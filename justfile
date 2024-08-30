@@ -31,8 +31,11 @@ build:
 test: run_migrations seed_database
 	go test ./...
 
-run: run_migrations seed_database
+run: run_migrations seed_database tailwind
 	go run ./main.go
 
 psql_dev: 
 	psql $NEWSLETTER_DATABASE_URL
+
+tailwind:
+	tailwindcss -i public/tailwind_in.css -o public/assets/main.css

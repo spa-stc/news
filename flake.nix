@@ -36,6 +36,9 @@
             just
             dive
 
+            # Frontend.
+            tailwindcss
+
             # Golang
             go
             go-tools
