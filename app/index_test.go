@@ -18,7 +18,7 @@ func TestIndex(t *testing.T) {
 	p, err := web.NewPublic("../public")
 	require.NoError(t, err)
 
-	s := app.NewServer(slogt.New(t), p.Assets(), p.Templates())
+	s := app.NewServer(slogt.New(t), p.Assets(), p.RootAssets(), p.Templates())
 
 	rec := httptest.NewRecorder()
 

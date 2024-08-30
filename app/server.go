@@ -11,7 +11,12 @@ import (
 	"stpaulacademy.tech/newsletter/web/templates"
 )
 
-func NewServer(logger *slog.Logger, a *assets.Assets, t *templates.TemplateRenderer) http.Handler {
+func NewServer(
+	logger *slog.Logger,
+	a *assets.Assets,
+	rootAssets *assets.Assets,
+	t *templates.TemplateRenderer,
+) http.Handler {
 	w := web.NewHandlerWrapper(logger)
 	r := chi.NewMux()
 
@@ -21,6 +26,10 @@ func NewServer(logger *slog.Logger, a *assets.Assets, t *templates.TemplateRende
 	r.Method(http.MethodGet, "/healthz", w.Wrap(handleHealthz))
 	r.Method(http.MethodGet, "/assets/{hash}", w.Wrap(web.ServeStatics(a)))
 	r.Method(http.MethodGet, "/", w.Wrap(handleIndex(t)))
+
+	r.NotFound(func(writer http.ResponseWriter, r *http.Request) {
+		w.Wrap(web.ServeRootStatics(rootAssets)).ServeHTTP(writer, r)
+	})
 
 	return r
 }
