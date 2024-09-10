@@ -3,6 +3,7 @@ package daysfetch
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"stpaulacademy.tech/newsletter/cron"
@@ -61,9 +62,9 @@ func (j *Job) Run(ctx context.Context) error {
 		}
 
 		if lunch, ok := lunches[t.Format(time.DateOnly)]; ok {
-			day.Lunch = lunch
+			day.Lunch = formatLunch(lunch)
 		} else {
-			day.Lunch = "Not Available"
+			day.Lunch = "Not Available."
 		}
 
 		if info, ok := otherInfo[t.Format(CSVDateFormat)]; ok {
@@ -96,4 +97,11 @@ func (j *Job) Notifer() cron.StatusNotifer {
 
 func (j *Job) Spec() string {
 	return j.schedule
+}
+
+func formatLunch(l string) string {
+	l = strings.TrimSuffix(l, "\\n")
+	l = strings.ReplaceAll(l, "\\n", ", ")
+
+	return l
 }
