@@ -31,6 +31,47 @@
           overlays = [];
         };
 
+        packages = {
+          default = pkgs.buildGoModule {
+            name = "spa-newsletter";
+
+            src = ./.;
+
+            vendorHash = "sha256-1ofVvgiH9zf5x8CLuFjEpJFwadelZ8GzbgZcCJFjnCk=";
+            doCheck = false;
+          };
+
+          docker = pkgs.dockerTools.buildLayeredImage {
+            name = "spa-newsletter";
+
+            config = {
+              Cmd = ["${self'.packages.default}/bin/newsletter"];
+              Env = [
+                "NEWSLETTER_PUBLIC_DIR=${self'.packages.public}"
+                "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              ];
+            };
+          };
+
+          public = pkgs.stdenv.mkDerivation {
+            name = "public-dir";
+
+            buildInputs = with pkgs; [tailwindcss];
+
+            src = ./.;
+
+            buildPhase = ''
+              tailwindcss -i public/tailwind_in.css -o public/assets/main.css -c tailwind.config.js --minify
+              rm -rf public/tailwind_in.css
+            '';
+
+            installPhase = ''
+              mkdir $out
+              cp -r ./public/* $out
+            '';
+          };
+        };
+
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             just
