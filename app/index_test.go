@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/neilotoole/slogt"
 	"github.com/stretchr/testify/require"
@@ -19,8 +20,9 @@ func TestIndex(t *testing.T) {
 	p, err := web.NewPublic("../public")
 	require.NoError(t, err)
 	tx := testutil.TestTx(ctx, t)
+	timegen := testutil.NewTestTimeGen(time.Date(2024, 12, 18, 0, 0, 0, 0, time.UTC))
 
-	s := app.NewServer(slogt.New(t), p.Assets(), p.RootAssets(), p.Templates(), tx)
+	s := app.NewServer(slogt.New(t), p.Assets(), p.RootAssets(), p.Templates(), tx, timegen)
 
 	rec := httptest.NewRecorder()
 
