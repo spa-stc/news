@@ -67,15 +67,15 @@ const CSVDateFormat = "1/2/2006"
 
 type CsvData struct {
 	Date     string `csv:"DATE"`
-	Rday     string `csv:"R. DAY"`
+	Rday     string `csv:"Rot day"`
 	Location string `csv:"LOCATION"`
 	Event    string `csv:"EVENT"`
 	Grade9   string `csv:"9th GRADE"`
 	Grade10  string `csv:"10th GRADE"`
 	Grade11  string `csv:"11th GRADE"`
 	Grade12  string `csv:"12th GRADE"`
-	ApInfo   string `csv:"AP EXAMS"`
 	CcInfo   string `csv:"CC TOPICS"`
+	Notes    string `csv:"Other NOTES"`
 }
 
 func (i *Getter) GetInfo(ctx context.Context) (map[string]CsvData, error) {

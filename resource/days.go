@@ -16,7 +16,6 @@ type Day struct {
 	RotationDay string
 	Location    string
 	Notes       string
-	ApInfo      string
 	CcInfo      string
 	Grade9      string
 	Grade10     string
@@ -34,7 +33,6 @@ func fromSqlcDay(d dbsqlc.Day) Day {
 		RotationDay: d.RotationDay,
 		Location:    d.Location,
 		Notes:       d.Notes,
-		ApInfo:      d.ApInfo,
 		CcInfo:      d.CcInfo,
 		Grade9:      d.Grade9,
 		Grade10:     d.Grade10,
@@ -87,7 +85,6 @@ func BatchUpsertDays(ctx context.Context, e db.Executor, days []Day) error {
 				RotationDay: d.RotationDay,
 				Location:    d.Location,
 				Notes:       d.Notes,
-				ApInfo:      d.ApInfo,
 				CcInfo:      d.CcInfo,
 				Grade9:      d.Grade9,
 				Grade10:     d.Grade10,

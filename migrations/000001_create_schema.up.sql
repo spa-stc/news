@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS days (
 	rotation_day VARCHAR NOT NULL,
 	location VARCHAR NOT NULL, 
 	notes VARCHAR NOT NULL, 
-	ap_info VARCHAR NOT NULL,
 	cc_info VARCHAR NOT NULL, 
 	grade_9 VARCHAR NOT NULL, 
 	grade_10 VARCHAR NOT NULL, 

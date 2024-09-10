@@ -43,8 +43,8 @@ func buildFixtures(dates []time.Time) (map[string]string, map[string]daysfetch.C
 			Grade10:  "grade_10",
 			Grade11:  "grade_11",
 			Grade12:  "grade_12",
-			ApInfo:   "ap_info",
 			CcInfo:   "cc_info",
+			Notes:    "notes",
 		}
 	}
 
@@ -55,7 +55,7 @@ func buildFixtures(dates []time.Time) (map[string]string, map[string]daysfetch.C
 			XPeriod:     "x_period",
 			RotationDay: "rotation_day",
 			Location:    "location",
-			ApInfo:      "ap_info",
+			Notes:       "notes",
 			CcInfo:      "cc_info",
 			Grade9:      "grade_9",
 			Grade10:     "grade_10",

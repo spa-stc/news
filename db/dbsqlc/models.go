@@ -15,7 +15,6 @@ type Day struct {
 	RotationDay string
 	Location    string
 	Notes       string
-	ApInfo      string
 	CcInfo      string
 	Grade9      string
 	Grade10     string

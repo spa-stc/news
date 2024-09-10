@@ -18,7 +18,6 @@ SELECT
 	rotation_day,
 	location, 
 	notes,
-	ap_info,
 	cc_info,
 	grade_9,
 	grade_10,
@@ -48,7 +47,6 @@ func (q *Queries) GetManyDaysByDate(ctx context.Context, db DBTX, dates []time.T
 			&i.RotationDay,
 			&i.Location,
 			&i.Notes,
-			&i.ApInfo,
 			&i.CcInfo,
 			&i.Grade9,
 			&i.Grade10,
@@ -68,7 +66,7 @@ func (q *Queries) GetManyDaysByDate(ctx context.Context, db DBTX, dates []time.T
 }
 
 const getManyDaysbyDateRange = `-- name: GetManyDaysbyDateRange :many
-SELECT date, lunch, x_period, rotation_day, location, notes, ap_info, cc_info, grade_9, grade_10, grade_11, grade_12, created_ts, updated_ts FROM days WHERE date >= $1 AND date <= $2
+SELECT date, lunch, x_period, rotation_day, location, notes, cc_info, grade_9, grade_10, grade_11, grade_12, created_ts, updated_ts FROM days WHERE date >= $1 AND date <= $2
 `
 
 type GetManyDaysbyDateRangeParams struct {
@@ -92,7 +90,6 @@ func (q *Queries) GetManyDaysbyDateRange(ctx context.Context, db DBTX, arg GetMa
 			&i.RotationDay,
 			&i.Location,
 			&i.Notes,
-			&i.ApInfo,
 			&i.CcInfo,
 			&i.Grade9,
 			&i.Grade10,
@@ -119,7 +116,6 @@ INSERT INTO days (
 	rotation_day,
 	location, 
 	notes,
-	ap_info,
 	cc_info,
 	grade_9,
 	grade_10,
@@ -132,12 +128,11 @@ INSERT INTO days (
 	$4, 
 	$5, 
 	$6, 
-	$7,
-	$8, 
+	$7, 
+	$8,
 	$9,
 	$10,
-	$11,
-	$12
+	$11
 ) 
 ON CONFLICT (date) DO UPDATE 
 SET 
@@ -146,13 +141,12 @@ SET
 	rotation_day = $4,
 	location = $5,
 	notes = $6,
-	ap_info = $7,
-	cc_info = $8, 
-	grade_9 = $9,
-	grade_10 = $10,
-	grade_11 = $11,
-	grade_12 = $12
-RETURNING date, lunch, x_period, rotation_day, location, notes, ap_info, cc_info, grade_9, grade_10, grade_11, grade_12, created_ts, updated_ts
+	cc_info = $7, 
+	grade_9 = $8,
+	grade_10 = $9,
+	grade_11 = $10,
+	grade_12 = $11
+RETURNING date, lunch, x_period, rotation_day, location, notes, cc_info, grade_9, grade_10, grade_11, grade_12, created_ts, updated_ts
 `
 
 type UpsertDayParams struct {
@@ -162,7 +156,6 @@ type UpsertDayParams struct {
 	RotationDay string
 	Location    string
 	Notes       string
-	ApInfo      string
 	CcInfo      string
 	Grade9      string
 	Grade10     string
@@ -178,7 +171,6 @@ func (q *Queries) UpsertDay(ctx context.Context, db DBTX, arg UpsertDayParams) (
 		arg.RotationDay,
 		arg.Location,
 		arg.Notes,
-		arg.ApInfo,
 		arg.CcInfo,
 		arg.Grade9,
 		arg.Grade10,
@@ -193,7 +185,6 @@ func (q *Queries) UpsertDay(ctx context.Context, db DBTX, arg UpsertDayParams) (
 		&i.RotationDay,
 		&i.Location,
 		&i.Notes,
-		&i.ApInfo,
 		&i.CcInfo,
 		&i.Grade9,
 		&i.Grade10,

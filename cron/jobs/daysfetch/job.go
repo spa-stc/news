@@ -76,8 +76,8 @@ func (j *Job) Run(ctx context.Context) error {
 			day.Grade10 = info.Grade10
 			day.Grade11 = info.Grade11
 			day.Grade12 = info.Grade12
-			day.ApInfo = info.ApInfo
 			day.CcInfo = info.CcInfo
+			day.Notes = info.Notes
 		}
 
 		return day
