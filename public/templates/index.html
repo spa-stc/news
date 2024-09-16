@@ -11,12 +11,7 @@
 {{ if .Data.Announcements }}
 <div class="flex flex-col my-2 space-y-2">
 	{{ range .Data.Announcements }}
-	<div class="rounded-md border-2 border-black bg-gray-100 p-2">
-		<h1 class="font-bold">{{ .Title }}:</h1>
-		<h2 class="text-sm text-gray-500">By: {{ .Author }}</h2>
-
-		<div class="pt-4">{{ .Content }}</div>
-	</div>
+	{{ partial "announcement.html" . }}
 	{{ end }}
 </div>
 {{ else }}
