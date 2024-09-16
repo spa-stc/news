@@ -50,3 +50,18 @@ INSERT INTO days (
 	'grade_11', 
 	'grade_12'
 );
+
+INSERT INTO announcements (
+	title, 
+	author,
+	content, 
+	display_start,
+	display_end
+) VALUES (
+	'title',
+	'author',
+	'content',
+	'2024-12-18',
+	'2024-12-19'
+);
+

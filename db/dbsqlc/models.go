@@ -8,6 +8,17 @@ import (
 	"time"
 )
 
+type Announcement struct {
+	ID           int64
+	Title        string
+	Author       string
+	Content      string
+	DisplayStart time.Time
+	DisplayEnd   time.Time
+	CreatedTs    time.Time
+	UpdatedTs    time.Time
+}
+
 type Day struct {
 	Date        time.Time
 	Lunch       string
