@@ -7,4 +7,19 @@
 	{{ partial "day.html" . }}
 	{{ end }}
 </div>
+<h1 class="text-xl font-bold">Announcements:</h1>
+{{ if .Data.Announcements }}
+<div class="flex flex-col my-2 space-y-2">
+	{{ range .Data.Announcements }}
+	<div class="rounded-md border-2 border-black bg-gray-100 p-2">
+		<h1 class="font-bold">{{ .Title }}:</h1>
+		<h2 class="text-sm text-gray-500">By: {{ .Author }}</h2>
+
+		<div class="pt-4">{{ .Content }}</div>
+	</div>
+	{{ end }}
+</div>
+{{ else }}
+<h2 class="mx-auto text-center py-12 text-xl font-semibold">None Found...</h2>
+{{ end }}
 {{ end }}

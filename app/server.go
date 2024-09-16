@@ -60,12 +60,19 @@ func handleIndex(t *templates.TemplateRenderer, e db.Executor, timeGen service.T
 			return err
 		}
 
+		announcements, err := resource.GetManyAnnouncementsByCurrentDay(r.Context(), e, timeGen.NowUTC())
+		if err != nil {
+			return err
+		}
+
 		data := struct {
-			Days         []resource.Day
-			DayUpdatedTS time.Time
+			Announcements []resource.Announcement
+			Days          []resource.Day
+			DayUpdatedTS  time.Time
 		}{
-			Days:         days,
-			DayUpdatedTS: days[0].UpdatedTS,
+			Announcements: announcements,
+			Days:          days,
+			DayUpdatedTS:  days[0].UpdatedTS,
 		}
 
 		return web.RenderTemplate(w, t, "index.html", web.TemplateCachePolicyPublic, templates.RenderData{
