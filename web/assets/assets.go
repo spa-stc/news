@@ -2,7 +2,7 @@ package assets
 
 import (
 	"crypto/md5" //nolint:gosec // Not used in cryptography.
-	"encoding/base32"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -45,7 +45,7 @@ func (a *Assets) ByHash(hash string) (Asset, bool) {
 func (a *Assets) AddBytes(name, mimeType string, content []byte) {
 	hash := md5.Sum(content) //nolint:gosec // Not used in cryptography.
 
-	h := base32.HexEncoding.EncodeToString(hash[:])
+	h := "v0-" + hex.EncodeToString(hash[:])
 
 	asset := Asset{
 		MimeType: mimeType,
