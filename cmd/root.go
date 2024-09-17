@@ -29,7 +29,7 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 		defer cancel()
 
 		c := config.Config{
-			DatbaseURL:  viper.GetString("database_url"),
+			DatabaseURL: viper.GetString("database_url"),
 			IcalURL:     viper.GetString("ical_url"),
 			SheetID:     viper.GetString("sheet_id"),
 			SheetGID:    viper.GetString("sheet_gid"),
@@ -60,7 +60,7 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 			return err
 		}
 
-		db, err := pgxpool.New(ctx, c.DatbaseURL)
+		db, err := pgxpool.New(ctx, c.DatabaseURL)
 		if err != nil {
 			return fmt.Errorf("error connecting to database: %w", err)
 		}

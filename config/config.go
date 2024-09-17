@@ -3,7 +3,7 @@ package config
 import "errors"
 
 type Config struct {
-	DatbaseURL string
+	DatabaseURL string
 
 	SheetID  string
 	SheetGID string
@@ -17,7 +17,7 @@ type Config struct {
 }
 
 func Validate(c Config) error {
-	if c.DatbaseURL == "" {
+	if c.DatabaseURL == "" {
 		return errors.New("missing database_url")
 	}
 
