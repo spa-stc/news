@@ -1,10 +1,13 @@
 <div id='{{ .Date.Format "2006-01-02" }}' class="rounded-md border-2 border-black bg-gray-100 p-2">
-	<h1 class="font-bold">{{ .Date.Format "Monday, 2006-01-02" }}:</h1>
+	<div class="flex flex-row">
+		<h1 class="font-bold">{{ .Date.Format "Monday, 2006-01-02" }}:</h1>
+		<div class="mx-auto"></div>
+		<p class="font-bold">Rotation Day: {{ .RotationDay }}</p>
+	</div>
 
 	{{ key_value "Lunch" .Lunch | partial "day_item.html" }}
 	{{ key_value "XPeriod" .XPeriod | partial "day_item.html" }}
 	{{ key_value "Location" .Location | partial "day_item.html" }}
-	{{ key_value "Rotation Day" .RotationDay | partial "day_item.html" }}
 	{{ key_value "Other Notes" .Notes | partial "day_item.html" }}
 	{{ key_value "College Counselling Info" .CcInfo | partial "day_item.html" }}
 	{{ key_value "Grade 9" .Grade9 | partial "day_item.html" }}
