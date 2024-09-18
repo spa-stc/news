@@ -42,10 +42,22 @@
           };
 
           docker = pkgs.dockerTools.buildLayeredImage {
-            name = "spa-newsletter";
+            name = "ghcr.io/spa-stc/news";
+            tag = "latest";
 
             config = {
-              Cmd = ["${self'.packages.default}/bin/newsletter"];
+              Entrypoint = pkgs.writeShellScript "newsletter-entrypoint" ''
+                set -euo pipefail
+
+                 if [[ -z $NEWSLETTER_DATABASE_URL ]]; then
+                 	echo "NEWSLETTER_DATABASE_URL must be set in the environment."
+                   	exit
+                 fi
+
+                ${pkgs.go-migrate}/bin/migrate -path="${self'.packages.migrations}" -database="$NEWSLETTER_DATABASE_URL" up
+
+                ${self'.packages.default}/bin/newsletter
+              '';
               Env = [
                 "NEWSLETTER_PUBLIC_DIR=${self'.packages.public}"
                 "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
@@ -54,7 +66,7 @@
           };
 
           public = pkgs.stdenv.mkDerivation {
-            name = "public-dir";
+            name = "spa-newsletter-assets";
 
             buildInputs = with pkgs; [tailwindcss];
 
@@ -68,6 +80,16 @@
             installPhase = ''
               mkdir $out
               cp -r ./public/* $out
+            '';
+          };
+
+          migrations = pkgs.stdenv.mkDerivation {
+            name = "spa-newsletter-migrations";
+            src = ./migrations;
+
+            installPhase = ''
+              mkdir $out
+              cp -r ./*.up.sql $out
             '';
           };
         };

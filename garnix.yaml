@@ -2,4 +2,3 @@ builds:
   exclude: []
   include:
   - devShells.x86_64-linux.default
-  - packages.x86_64-linux.docker

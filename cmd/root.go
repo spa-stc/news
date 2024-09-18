@@ -162,6 +162,7 @@ func runServer(logger *slog.Logger, h http.Handler, addr string) *http.Server {
 	go func() {
 		if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("failed to start http server", "error", err)
+			os.Exit(1)
 		}
 	}()
 
