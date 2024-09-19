@@ -68,6 +68,7 @@ func (p *Partials) Render(name string, data interface{}) (template.HTML, error) 
 		"asset":     p.assets.GetLink,
 		"partial":   p.Render,
 		"key_value": keyValue,
+		"sanitize":  renderSafe(),
 	})
 
 	t, err := t.Parse(partial)

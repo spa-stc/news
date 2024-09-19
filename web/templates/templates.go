@@ -81,6 +81,7 @@ func (t *TemplateRenderer) Render(name string, data RenderData, w io.Writer) err
 		"asset":     t.Assets.GetLink,
 		"partial":   t.Partials.Render,
 		"key_value": keyValue,
+		"sanitize":  renderSafe(),
 	})
 
 	templ, err := templ.New("root.html").Parse(t.BaseTemplate)

@@ -2,5 +2,7 @@
 	<h1 class="font-bold">{{ .Title }}:</h1>
 	<h2 class="text-sm text-gray-600">By: {{ .Author }}</h2>
 
-	<div class="pt-4">{{ .Content }}</div>
+	<div class="pt-4 prose-sm prose-a:text-blue-600 prose-a:hover:text-purple-600">{{
+		.Content | sanitize }}
+	</div>
 </div>
