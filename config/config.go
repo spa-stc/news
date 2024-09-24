@@ -14,6 +14,9 @@ type Config struct {
 	Port int
 
 	Development bool
+
+	AdminUsername string
+	AdminPassword string
 }
 
 func Validate(c Config) error {
@@ -34,6 +37,14 @@ func Validate(c Config) error {
 	}
 	if c.PublicDir == "" {
 		return errors.New("missing public_dir")
+	}
+
+	if c.AdminUsername == "" {
+		return errors.New("missing admin_username")
+	}
+
+	if c.AdminPassword == "" {
+		return errors.New("missing admin_password")
 	}
 
 	return nil

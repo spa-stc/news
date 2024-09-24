@@ -10,6 +10,7 @@ import (
 	"github.com/neilotoole/slogt"
 	"github.com/stretchr/testify/require"
 	"stpaulacademy.tech/newsletter/app"
+	"stpaulacademy.tech/newsletter/config"
 	"stpaulacademy.tech/newsletter/util/testutil"
 	"stpaulacademy.tech/newsletter/web"
 )
@@ -22,7 +23,7 @@ func TestIndex(t *testing.T) {
 	tx := testutil.TestTx(ctx, t)
 	timegen := testutil.NewTestTimeGen(time.Date(2024, 12, 18, 0, 0, 0, 0, time.UTC))
 
-	s := app.NewServer(slogt.New(t), p.Assets(), p.RootAssets(), p.Templates(), tx, timegen)
+	s := app.NewServer(slogt.New(t), p.Assets(), p.RootAssets(), p.Templates(), tx, timegen, config.Config{})
 
 	rec := httptest.NewRecorder()
 

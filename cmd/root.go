@@ -29,13 +29,15 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 		defer cancel()
 
 		c := config.Config{
-			DatabaseURL: viper.GetString("database_url"),
-			IcalURL:     viper.GetString("ical_url"),
-			SheetID:     viper.GetString("sheet_id"),
-			SheetGID:    viper.GetString("sheet_gid"),
-			PublicDir:   viper.GetString("public_dir"),
-			Port:        viper.GetInt("port"),
-			Development: viper.GetBool("development"),
+			DatabaseURL:   viper.GetString("database_url"),
+			IcalURL:       viper.GetString("ical_url"),
+			SheetID:       viper.GetString("sheet_id"),
+			SheetGID:      viper.GetString("sheet_gid"),
+			PublicDir:     viper.GetString("public_dir"),
+			Port:          viper.GetInt("port"),
+			Development:   viper.GetBool("development"),
+			AdminUsername: viper.GetString("admin_username"),
+			AdminPassword: viper.GetString("admin_password"),
 		}
 
 		err := config.Validate(c)
@@ -83,7 +85,7 @@ var RootCMD = &cobra.Command{ //nolint:gochecknoglobals // Not state
 		cronservice.Start()
 		defer cronservice.Stop()
 
-		app := app.NewServer(logger, public.Assets(), public.RootAssets(), public.Templates(), db, timegen)
+		app := app.NewServer(logger, public.Assets(), public.RootAssets(), public.Templates(), db, timegen, c)
 		server := runServer(logger, app, fmt.Sprintf("0.0.0.0:%d", c.Port))
 		defer func() {
 			if err := server.Shutdown(ctx); err != nil {
@@ -109,6 +111,8 @@ func init() { //nolint:gochecknoinits // Not state related
 	RootCMD.PersistentFlags().Int("port", 3000, "What port to serve http over")
 	RootCMD.PersistentFlags().String("public-dir", "", "Location of templates and static files.")
 	RootCMD.PersistentFlags().Bool("development", false, "Enable development mode.")
+	RootCMD.PersistentFlags().String("admin-username", "", "Username to admin page.")
+	RootCMD.PersistentFlags().String("admin-password", "", "Password to admin page.")
 
 	err := viper.BindPFlag("database_url", RootCMD.PersistentFlags().Lookup("database-url"))
 	if err != nil {
@@ -141,6 +145,16 @@ func init() { //nolint:gochecknoinits // Not state related
 	}
 
 	err = viper.BindPFlag("development", RootCMD.PersistentFlags().Lookup("development"))
+	if err != nil {
+		panic(err)
+	}
+
+	err = viper.BindPFlag("admin_username", RootCMD.PersistentFlags().Lookup("admin-username"))
+	if err != nil {
+		panic(err)
+	}
+
+	err = viper.BindPFlag("admin_password", RootCMD.PersistentFlags().Lookup("admin-password"))
 	if err != nil {
 		panic(err)
 	}

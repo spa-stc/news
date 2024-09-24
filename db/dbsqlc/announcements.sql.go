@@ -42,3 +42,49 @@ func (q *Queries) GetManyAnnouncementsWhereInRange(ctx context.Context, db DBTX,
 	}
 	return items, nil
 }
+
+const insertAnnouncement = `-- name: InsertAnnouncement :one
+INSERT INTO announcements (
+	title,
+	author,
+	content, 
+	display_start, 
+	display_end
+) VALUES (
+	$1, 
+	$2,
+	$3, 
+	$4, 
+	$5
+) RETURNING id, title, author, content, display_start, display_end, created_ts, updated_ts
+`
+
+type InsertAnnouncementParams struct {
+	Title        string
+	Author       string
+	Content      string
+	DisplayStart time.Time
+	DisplayEnd   time.Time
+}
+
+func (q *Queries) InsertAnnouncement(ctx context.Context, db DBTX, arg InsertAnnouncementParams) (Announcement, error) {
+	row := db.QueryRow(ctx, insertAnnouncement,
+		arg.Title,
+		arg.Author,
+		arg.Content,
+		arg.DisplayStart,
+		arg.DisplayEnd,
+	)
+	var i Announcement
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Author,
+		&i.Content,
+		&i.DisplayStart,
+		&i.DisplayEnd,
+		&i.CreatedTs,
+		&i.UpdatedTs,
+	)
+	return i, err
+}

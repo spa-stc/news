@@ -1,0 +1,21 @@
+{{ template "root.html" . }}
+{{ define "content" }}
+<h1 class="font-bold text-xl mt-2">Add Announcement:</h1>
+<form action="/admin/submit" method="post">
+	<h3 class="font-bold text-lg">Title:</h3>
+	<input class="border-2 rounded-md p-2 w-full" name="title" type="text" />
+	<h3 class="font-bold text-lg">Author:</h3>
+	<input class="border-2 rounded-md p-2 w-full" name="author" type="text" />
+
+	<h3 class="font-bold text-lg">Start Date:</h3>
+	<input class="border-2 rounded-md p-2 w-full" name="start_date" type="date" />
+
+	<h3 class="font-bold text-lg">End Date:</h3>
+	<input class="border-2 rounded-md p-2 w-full" name="end_date" type="date" />
+
+	<h3 class="font-bold text-lg">Content:</h3>
+	<textarea class="border-2 rounded-md p-2 w-full" name="content"></textarea>
+
+	<input class="font-bold border-2 border-black px-4 py-2 rounded-md bg-green-500 mt-4" type="submit" />
+</form>
+{{ end }}

@@ -22,6 +22,24 @@ type Announcement struct {
 	UpdatedTS time.Time
 }
 
+type NewAnnouncement struct {
+	Title        string
+	Author       string
+	Content      string
+	DisplayStart time.Time
+	DisplayEnd   time.Time
+}
+
+func toSqlcNewAnnouncement(n NewAnnouncement) dbsqlc.InsertAnnouncementParams {
+	return dbsqlc.InsertAnnouncementParams{
+		Title:        n.Title,
+		Author:       n.Author,
+		Content:      n.Content,
+		DisplayStart: n.DisplayStart.UTC(),
+		DisplayEnd:   n.DisplayEnd.UTC(),
+	}
+}
+
 func fromSqlcAnnouncement(d dbsqlc.Announcement) Announcement {
 	return Announcement{
 		ID:           d.ID,
@@ -45,4 +63,13 @@ func GetManyAnnouncementsByCurrentDay(ctx context.Context, e db.Executor, today 
 	}
 
 	return sliceutil.Map(announcements, fromSqlcAnnouncement), nil
+}
+
+func InsertAnnouncement(ctx context.Context, e db.Executor, newAnnouncement NewAnnouncement) (Announcement, error) {
+	announcement, err := dbsqlc.New().InsertAnnouncement(ctx, e, toSqlcNewAnnouncement(newAnnouncement))
+	if err != nil {
+		return Announcement{}, db.HandleError(err)
+	}
+
+	return fromSqlcAnnouncement(announcement), nil
 }

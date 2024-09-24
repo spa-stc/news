@@ -60,4 +60,33 @@ func TestAnnouncementsResource(t *testing.T) {
 
 		require.Equal(t, expected, a)
 	})
+
+	t.Run("test_insert", func(t *testing.T) {
+		tx := testutil.TestTx(ctx, t)
+
+		expected := resource.Announcement{
+			ID:           2,
+			Title:        "title",
+			Author:       "author",
+			Content:      "content",
+			CreatedTS:    time.UnixMicro(0).UTC(),
+			UpdatedTS:    time.UnixMicro(0).UTC(),
+			DisplayStart: time.UnixMicro(0).UTC(),
+			DisplayEnd:   time.UnixMicro(0).UTC(),
+		}
+
+		a, err := resource.InsertAnnouncement(ctx, tx, resource.NewAnnouncement{
+			Title:        expected.Title,
+			Author:       expected.Author,
+			Content:      expected.Content,
+			DisplayStart: expected.DisplayStart,
+			DisplayEnd:   expected.DisplayEnd,
+		})
+		require.NoError(t, err)
+
+		a.CreatedTS = time.UnixMicro(0).UTC()
+		a.UpdatedTS = time.UnixMicro(0).UTC()
+
+		require.Equal(t, expected, a)
+	})
 }
