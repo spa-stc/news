@@ -43,8 +43,8 @@ func NewServer(
 			c.AdminUsername: c.AdminPassword,
 		}))
 		r.Method(http.MethodGet, "/", w.Wrap(handleAdmin(t, e, timeGetter)))
-		r.Method(http.MethodPost, "/submit", w.Wrap(handleSubmit(logger, e)))
-		r.Method(http.MethodDelete, "/delete/{id}", w.Wrap(handleDelete(e)))
+		r.Method(http.MethodPost, "/announcements", w.Wrap(handleSubmit(logger, e)))
+		r.Method(http.MethodDelete, "/announcements/{id}", w.Wrap(handleDelete(e)))
 	})
 
 	r.NotFound(func(writer http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,7 @@
 	<div class="flex flex-row">
 		<h1 class="font-bold">{{ .Title }}:</h1>
 		<div class="mx-auto"></div>
-		<button class="px-4 py-2 border-2 border-black rounded-md bg-red-500" hx-delete="/admin/delete/{{ .ID }}"
+		<button class="px-4 py-2 border-2 border-black rounded-md bg-red-500" hx-delete="/admin/announcements/{{ .ID }}"
 			hx-target="#a-{{ .ID }}" hx-swap="outerHTML swap:0.25s">Delete</button>
 	</div>
 	<h2 class="text-sm text-gray-600">By: {{ .Author }}</h2>
