@@ -63,5 +63,11 @@ INSERT INTO announcements (
 	'content',
 	'2024-12-18',
 	'2024-12-19'
+), (
+	'title',
+	'author', 
+	'content',
+	'2024-12-20',
+	'2024-12-21'
 );
 

@@ -10,6 +10,48 @@ import (
 	"time"
 )
 
+const deleteAnnouncement = `-- name: DeleteAnnouncement :exec
+DELETE FROM announcements WHERE id = $1
+`
+
+func (q *Queries) DeleteAnnouncement(ctx context.Context, db DBTX, id int64) error {
+	_, err := db.Exec(ctx, deleteAnnouncement, id)
+	return err
+}
+
+const getAllUpcomingAnnouncements = `-- name: GetAllUpcomingAnnouncements :many
+SELECT id, title, author, content, display_start, display_end, created_ts, updated_ts FROM announcements WHERE display_end >= $1
+`
+
+func (q *Queries) GetAllUpcomingAnnouncements(ctx context.Context, db DBTX, today time.Time) ([]Announcement, error) {
+	rows, err := db.Query(ctx, getAllUpcomingAnnouncements, today)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Announcement
+	for rows.Next() {
+		var i Announcement
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Author,
+			&i.Content,
+			&i.DisplayStart,
+			&i.DisplayEnd,
+			&i.CreatedTs,
+			&i.UpdatedTs,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getManyAnnouncementsWhereInRange = `-- name: GetManyAnnouncementsWhereInRange :many
 SELECT id, title, author, content, display_start, display_end, created_ts, updated_ts FROM announcements WHERE display_start <= $1 AND display_end >= $1
 `

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -41,8 +42,9 @@ func NewServer(
 		r.Use(chimd.BasicAuth("spa-newsletter", map[string]string{
 			c.AdminUsername: c.AdminPassword,
 		}))
-		r.Method(http.MethodGet, "/", w.Wrap(handleAdmin(t)))
+		r.Method(http.MethodGet, "/", w.Wrap(handleAdmin(t, e, timeGetter)))
 		r.Method(http.MethodPost, "/submit", w.Wrap(handleSubmit(logger, e)))
+		r.Method(http.MethodDelete, "/delete/{id}", w.Wrap(handleDelete(e)))
 	})
 
 	r.NotFound(func(writer http.ResponseWriter, r *http.Request) {
@@ -91,9 +93,39 @@ func handleIndex(t *templates.TemplateRenderer, e db.Executor, timeGen service.T
 	}
 }
 
-func handleAdmin(t *templates.TemplateRenderer) web.Handler {
-	return func(w http.ResponseWriter, _ *http.Request) error {
-		return web.RenderTemplate(w, t, "admin.html", web.TemplateCachePolicyPrivate, templates.RenderData{})
+func handleAdmin(t *templates.TemplateRenderer, e db.Executor, timeGen service.TimeGenerator) web.Handler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		announcements, err := resource.GetUpcomingAnnouncements(r.Context(), e, timeGen.NowUTC())
+		if err != nil {
+			return err
+		}
+
+		data := struct {
+			Announcements []resource.Announcement
+		}{
+			Announcements: announcements,
+		}
+
+		return web.RenderTemplate(w, t, "admin.html", web.TemplateCachePolicyPrivate, templates.RenderData{
+			Data: data,
+		})
+	}
+}
+
+func handleDelete(e db.Executor) web.Handler {
+	return func(_ http.ResponseWriter, r *http.Request) error {
+		rawID := r.PathValue("id")
+
+		id, err := strconv.Atoi(rawID)
+		if err != nil {
+			return web.RespondError("Invalid ID.", http.StatusBadRequest, err)
+		}
+
+		if err := resource.DeleteAnnouncement(r.Context(), e, int64(id)); err != nil {
+			return err
+		}
+
+		return nil
 	}
 }
 

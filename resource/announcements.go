@@ -73,3 +73,21 @@ func InsertAnnouncement(ctx context.Context, e db.Executor, newAnnouncement NewA
 
 	return fromSqlcAnnouncement(announcement), nil
 }
+
+func DeleteAnnouncement(ctx context.Context, e db.Executor, id int64) error {
+	err := dbsqlc.New().DeleteAnnouncement(ctx, e, id)
+	if err != nil {
+		return db.HandleError(err)
+	}
+
+	return nil
+}
+
+func GetUpcomingAnnouncements(ctx context.Context, e db.Executor, today time.Time) ([]Announcement, error) {
+	announcements, err := dbsqlc.New().GetAllUpcomingAnnouncements(ctx, e, today)
+	if err != nil {
+		return nil, db.HandleError(err)
+	}
+
+	return sliceutil.Map(announcements, fromSqlcAnnouncement), nil
+}
