@@ -14,6 +14,6 @@
 		</p>
 		<div class="mx-auto"></div>
 		<button class="px-4 py-2 border-2 border-black rounded-md bg-red-500" hx-delete="/admin/announcements/{{ .ID }}"
-			hx-target="#a-{{ .ID }}" hx-swap="outerHTML swap:0.25s">Delete</button>
+			hx-target="#a-{{ .ID }}" hx-confirm="Delete Announcement?" hx-swap="outerHTML swap:0.25s">Delete</button>
 	</div>
 </div>
