@@ -62,7 +62,7 @@ func handleHealthz(w http.ResponseWriter, _ *http.Request) error {
 
 func handleIndex(t *templates.TemplateRenderer, e db.Executor, timeGen service.TimeGenerator) web.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		week := timeutil.GetWeek(time.Sunday, timeGen.NowUTC())
+		week := timeutil.GetWeek(time.Sunday, timeGen.NowUTC().Local())
 		days, err := resource.GetManyDays(r.Context(), e, week[1:6])
 		if err != nil {
 			if errors.Is(err, db.ErrNotFound) {
@@ -81,10 +81,14 @@ func handleIndex(t *templates.TemplateRenderer, e db.Executor, timeGen service.T
 			Announcements []resource.Announcement
 			Days          []resource.Day
 			DayUpdatedTS  time.Time
+			ShowToday     bool
+			Today         time.Time
 		}{
 			Announcements: announcements,
 			Days:          days,
 			DayUpdatedTS:  days[0].UpdatedTS,
+			ShowToday:     timeutil.IsWeekday(timeGen.NowUTC().Local()),
+			Today:         timeGen.NowUTC().Local(),
 		}
 
 		return web.RenderTemplate(w, t, "index.html", web.TemplateCachePolicyPublic, templates.RenderData{

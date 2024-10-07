@@ -1,7 +1,27 @@
 {{ template "root.html" . }}
 {{ define "content" }}
+{{ if .Data.ShowToday }}
+<script>
+	function goToday() {
+		let element = document.getElementById('{{ .Data.Today.Format "2006-01-02" }}');
+
+		let y = element.getBoundingClientRect().top + window.scrollY;
+
+
+		window.scroll({
+			top: y,
+			behavior: "smooth",
+		})
+	}
+</script>
+{{ end }}
+
 <h1 class="text-xl font-bold">Day By Day:</h1>
 <p class="text-gray-600">Updated: {{ .Data.DayUpdatedTS.Local.Format "2006-01-02 03:04 PM" }}</p>
+
+{{ if .Data.ShowToday }}
+<button class="font-bold border-2 border-black rounded-md bg-yellow-400 py-2 w-full" onclick="goToday()">Today</button>
+{{ end }}
 <div class="flex flex-col my-2 space-y-2">
 	{{ range .Data.Days }}
 	{{ partial "day.html" . }}

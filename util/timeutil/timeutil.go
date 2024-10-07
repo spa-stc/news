@@ -17,3 +17,9 @@ func GetWeek(start time.Weekday, today time.Time) []time.Time {
 
 	return week
 }
+
+func IsWeekday(today time.Time) bool {
+	weekday := today.Weekday()
+
+	return 0 < weekday && weekday < 6
+}

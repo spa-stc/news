@@ -28,3 +28,19 @@ func TestWeek(t *testing.T) {
 
 	require.Equal(t, expected, actual)
 }
+
+func TestIsWeekday(t *testing.T) {
+	t.Parallel()
+
+	w := timeutil.IsWeekday(time.Date(2023, 12, 18, 0, 0, 0, 0, time.UTC))
+
+	require.True(t, w)
+
+	w = timeutil.IsWeekday(time.Date(2023, 12, 22, 0, 0, 0, 0, time.UTC))
+
+	require.True(t, w)
+
+	w = timeutil.IsWeekday(time.Date(2023, 12, 16, 0, 0, 0, 0, time.UTC))
+
+	require.False(t, w)
+}
