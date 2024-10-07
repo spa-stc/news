@@ -47,7 +47,7 @@
 
             config = {
               Entrypoint = pkgs.writeShellScript "newsletter-entrypoint" ''
-                set -euo pipefail
+                set -eo pipefail
 
                  if [[ -z $NEWSLETTER_DATABASE_URL ]]; then
                  	echo "NEWSLETTER_DATABASE_URL must be set in the environment."
