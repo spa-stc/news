@@ -4,14 +4,7 @@
 <script>
 	function goToday() {
 		let element = document.getElementById('{{ .Data.Today.Format "2006-01-02" }}');
-
-		let y = element.getBoundingClientRect().top + window.scrollY;
-
-
-		window.scroll({
-			top: y,
-			behavior: "smooth",
-		})
+		element.scrollIntoView({behavior: "smooth", block: "center"})
 	}
 </script>
 {{ end }}
