@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	chimd "github.com/go-chi/chi/v5/middleware"
+	"github.com/gomarkdown/markdown"
 	"stpaulacademy.tech/newsletter/config"
 	"stpaulacademy.tech/newsletter/db"
 	"stpaulacademy.tech/newsletter/resource"
@@ -149,10 +150,12 @@ func handleSubmit(logger *slog.Logger, e db.Executor) web.Handler {
 			return web.RespondError("Invalid Form Date Value.", http.StatusBadRequest, err)
 		}
 
+		content := markdown.ToHTML([]byte(r.FormValue("content")), nil, nil)
+
 		n := resource.NewAnnouncement{
 			Title:        r.FormValue("title"),
 			Author:       r.FormValue("author"),
-			Content:      r.FormValue("content"),
+			Content:      string(content),
 			DisplayStart: displayStart,
 			DisplayEnd:   displayEnd,
 		}

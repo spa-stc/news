@@ -37,7 +37,7 @@
 
             src = ./.;
 
-            vendorHash = "sha256-/6As9dBzLOxkSttqPK877Cg2eX9XV2BW+XtQN4Bg0K8=";
+            vendorHash = "sha256-M53e6aFThhScGoDp4RqM5JQFhLHfOm5nV4RssfQ1Mdc=";
             doCheck = false;
           };
 

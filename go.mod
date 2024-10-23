@@ -8,6 +8,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/gocarina/gocsv v0.0.0-20240520201108-78e41c74b4b1
+	github.com/gomarkdown/markdown v0.0.0-20240930133441-72d49d9543d8
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/neilotoole/slogt v1.1.0
