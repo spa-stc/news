@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+IMAGE_CURRENT="ghcr.io/spa-stc/news:latest"
+
+# Build
+nix build .#docker
+docker load < result
+
+# Check For New Tag.
+if [[ -n ${IMAGE_TARGET:-} ]]; then
+	echo "New Image Name Found \n Tagging"
+	docker tag $IMAGE_CURRENT $IMAGE_TARGET 
+else
+	IMAGE_TARGET=$IMAGE_CURRENT
+fi
+
+docker push $IMAGE_TARGET
