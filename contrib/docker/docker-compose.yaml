@@ -1,0 +1,31 @@
+networks:
+  newsletter:
+    external: false
+services:
+  server:
+    image: ghcr.io/spa-stc/news:latest
+    restart: "no"
+    env_file: ".env"
+    environment:
+      NEWSLETTER_DATABASE_URL: "postgresql://postgres:1234@db:5432/postgres?sslmode=disable"
+    networks:
+      - newsletter
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:16
+    restart: "no"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+    networks:
+      - newsletter
+    healthcheck:
+      test: ["CMD-SHELL", "su postgres -c 'pg_isready'"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+
