@@ -105,16 +105,16 @@
 
             buildInputs = with pkgs; [tailwindcss];
 
-            src = ./.;
+            src = ./public;
 
             buildPhase = ''
-              tailwindcss -i public/tailwind_in.css -o public/assets/main.css -c tailwind.config.js --minify
-              rm -rf public/tailwind_in.css
+              tailwindcss -i tailwind_in.css -o assets/main.css -c tailwind.config.js --minify
+              rm -rf tailwind_in.css tailwind.config.js
             '';
 
             installPhase = ''
               mkdir $out
-              cp -r ./public/* $out
+              cp -r ./* $out
             '';
           };
 

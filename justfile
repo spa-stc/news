@@ -40,7 +40,7 @@ psql_dev:
 	psql $NEWSLETTER_DATABASE_URL
 
 tailwind:
-	tailwindcss -i public/tailwind_in.css -o public/assets/main.css
+	tailwindcss -c public/tailwind.config.js -i public/tailwind_in.css -o public/assets/main.css
 
 tailwind_watch:
-	tailwindcss -w -i public/tailwind_in.css -o public/assets/main.css
+	tailwindcss -c public/tailwind.config.js -w -i public/tailwind_in.css -o public/assets/main.css
