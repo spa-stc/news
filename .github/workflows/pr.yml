@@ -84,4 +84,4 @@ jobs:
             substituters = https://cache.nixos.org/ https://cache.garnix.io
 
       - name: Run Tests
-        run: nix develop -c just test 
+        run: nix develop -c make test 
