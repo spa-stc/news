@@ -131,7 +131,6 @@
 
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            just
             dive
 
             # Frontend.
